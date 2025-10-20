@@ -538,6 +538,14 @@ function App() {
           setIsAddRestaurantFormOpen(false);
           refetch();
         }}
+        user={user}
+      />
+    </div>
+  );
+}
+
+function AppWithRouter() {
+  return (
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
