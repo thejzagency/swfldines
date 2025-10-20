@@ -1,0 +1,20 @@
+Query 1 - Test Database Connection:
+SELECT 'Database connection working' as status, now() as current_time;
+
+Query 2 - Count Restaurants:
+SELECT COUNT(*) as restaurant_count FROM restaurants;
+
+Query 3 - Count User Profiles:
+SELECT COUNT(*) as user_profiles_count FROM user_profiles;
+
+Query 4 - List All Tables:
+SELECT table_name FROM information_schema.tables WHERE table_schema = 'public' ORDER BY table_name;
+
+Query 5 - Check Auth Users:
+SELECT raw_app_meta_data, raw_user_meta_data, email, created_at FROM auth.users LIMIT 5;
+
+Query 6 - Test Auth Function:
+SELECT auth.uid() as current_user_id;
+
+Query 7 - Check RLS Status:
+SELECT schemaname, tablename, rowsecurity as rls_enabled FROM pg_tables WHERE schemaname = 'public' AND tablename IN ('restaurants', 'user_profiles') ORDER BY tablename;
