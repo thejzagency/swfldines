@@ -34,6 +34,11 @@ interface FilterOptions {
   city: string;
   features: string[];
 }
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { LoginPage } from './pages/LoginPage';
+import { PricingPage } from './pages/PricingPage';
+import { SuccessPage } from './pages/SuccessPage';
+import { HomePage } from './pages/HomePage';
 
 function App() {
   // State management
@@ -533,9 +538,14 @@ function App() {
           setIsAddRestaurantFormOpen(false);
           refetch();
         }}
-        user={user}
-      />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="/success" element={<SuccessPage />} />
+      </Routes>
+    </Router>
   );
 }
 

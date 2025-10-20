@@ -1,24 +1,16 @@
 import { createClient } from '@supabase/supabase-js';
-import { env, logEnvironmentStatus } from '../config/env';
 
-const supabaseUrl = env.supabaseUrl;
-const supabaseAnonKey = env.supabaseAnonKey;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-logEnvironmentStatus();
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables');
+}
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
-  }
+    detectSessionInUrl: false,
+  },
 });
-
-supabase.from('restaurants').select('count', { count: 'exact', head: true })
-  .then(({ count, error }) => {
-    if (error) {
-      console.error('❌ Database connection error:', error);
-    } else {
-      console.log('✅ Database connected - Restaurant count:', count);
-    }
-  });
