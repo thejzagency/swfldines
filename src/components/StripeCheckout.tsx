@@ -11,39 +11,45 @@ interface StripeCheckoutProps {
 const PLANS = {
   featured: {
     name: 'Featured',
-    price: '$49',
+    price: '$29',
     period: '/month',
     features: [
-      'Priority placement in search results',
-      'Featured badge on your listing',
-      'Basic analytics dashboard',
-      'Email support'
+      'Everything in Free',
+      'Photo gallery (up to 5 images)',
+      'Full description section',
+      'Website & social media links',
+      'Menu image upload',
+      'Featured listing badge',
+      'Boosted in search results'
     ]
   },
   premium: {
     name: 'Premium',
-    price: '$99',
+    price: '$59',
     period: '/month',
     features: [
       'Everything in Featured',
-      'Top 3 placement guarantee',
-      'Advanced analytics & insights',
-      'Social media integration',
-      'Priority email & phone support',
-      'Monthly performance reports'
+      'Photo gallery (up to 15 images)',
+      'Video showcase (1 video)',
+      'Priority placement in search',
+      'Homepage featured rotation',
+      'Monthly visitor analytics',
+      'Click & view tracking'
     ]
   },
   premium_plus: {
-    name: 'Premium Plus',
-    price: '$199',
+    name: 'Spotlight',
+    price: '$99',
     period: '/month',
     features: [
       'Everything in Premium',
-      'Homepage featured spot',
-      'Dedicated account manager',
-      'Custom marketing campaigns',
-      'API access for integrations',
-      '24/7 priority support'
+      'Unlimited photo gallery',
+      'Video showcase (up to 3 videos)',
+      'Top 3 search placement',
+      'Homepage hero rotation',
+      'Automatic blog feature',
+      'Advanced analytics dashboard',
+      '90-day performance history'
     ]
   }
 };
