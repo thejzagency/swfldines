@@ -5,13 +5,14 @@ import { fetchRestaurantAnalytics } from '../utils/analytics';
 interface AnalyticsDashboardProps {
   restaurantId: string;
   listingType: string;
+  onUpgrade?: () => void;
 }
 
 interface ClicksByType {
   [key: string]: number;
 }
 
-const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ restaurantId, listingType }) => {
+const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ restaurantId, listingType, onUpgrade }) => {
   const [analytics, setAnalytics] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState(30);
@@ -58,7 +59,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ restaurantId, l
         <p className="text-gray-600 mb-4">
           Upgrade to Premium or Spotlight to access visitor analytics and click tracking
         </p>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold">
+        <button
+          onClick={onUpgrade}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold"
+        >
           Upgrade Now
         </button>
       </div>
@@ -160,7 +164,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ restaurantId, l
             <p className="text-gray-600 mb-4">
               Upgrade to Spotlight tier for 90-day performance history and detailed click breakdowns
             </p>
-            <button className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold">
+            <button
+              onClick={onUpgrade}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold"
+            >
               Upgrade to Spotlight
             </button>
           </div>

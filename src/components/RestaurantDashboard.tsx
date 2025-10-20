@@ -74,6 +74,10 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
           <AnalyticsDashboard
             restaurantId={selectedRestaurant.id}
             listingType={selectedRestaurant.listing_type}
+            onUpgrade={() => {
+              setSelectedRestaurant(null);
+              setShowUpgrade(true);
+            }}
           />
         </div>
       </div>
