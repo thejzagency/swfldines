@@ -23,7 +23,7 @@ import Footer from './components/Footer';
 import ListingTierComparison from './components/ListingTierComparison';
 import UserCleanupUtility from './components/UserCleanupUtility';
 import StripeCheckout from './components/StripeCheckout';
-import SuccessPage from './components/SuccessPage';
+import SuccessPageComponent from './components/SuccessPage';
 import CancelPage from './components/CancelPage';
 import SubscriptionStatus from './components/SubscriptionStatus';
 import AddRestaurantForm from './components/AddRestaurantForm';
@@ -314,7 +314,7 @@ function App() {
 
   if (currentPage === 'success') {
     return (
-      <SuccessPage 
+      <SuccessPageComponent
         onNavigateHome={() => setCurrentPage('home')}
         onNavigateDashboard={() => setCurrentPage('restaurant-dashboard')}
       />
