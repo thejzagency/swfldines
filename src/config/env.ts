@@ -2,9 +2,9 @@
 // This file ensures the correct database is always used
 
 const PRODUCTION_CONFIG = {
-  SUPABASE_URL: 'https://rpraqpxdrwbtgpxtbhie.supabase.co',
-  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwcmFxcHhkcndidGdweHRiaGllIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5MDI4MDMsImV4cCI6MjA3NTQ3ODgwM30.pi8k9bU3kdmtQKaNCMzmCgxyDib-pBEuoVNerc4nxaY',
-  DATABASE_ID: 'rpraqpxdrwbtgpxtbhie'
+  SUPABASE_URL: 'https://wiosivnwuqroaoqojlse.supabase.co',
+  SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indpb3Npdm53dXFyb2FvcW9qbHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjg1NzYxMzksImV4cCI6MjA0NDE1MjEzOX0.EtP5e2F9xZj8xVwE4lqW2R0VbFnHdZKUBEHGXGhT9zQ',
+  DATABASE_ID: 'wiosivnwuqroaoqojlse'
 } as const;
 
 function validateEnvironment() {
