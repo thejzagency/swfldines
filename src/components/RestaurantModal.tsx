@@ -2,6 +2,7 @@ import React from 'react';
 import { X, MapPin, Phone, Globe, Clock, Star, Crown, ExternalLink, Building, CheckCircle, Facebook, Instagram, Twitter, Linkedin, Youtube, Mail } from 'lucide-react';
 import { Restaurant } from '../types';
 import { trackRestaurantView, trackPhoneClick, trackWebsiteClick, trackDirectionsClick, trackMenuClick } from '../utils/analytics';
+import { MetaTags, generateRestaurantStructuredData } from './MetaTags';
 
 interface RestaurantModalProps {
   restaurant: Restaurant | null;
@@ -65,8 +66,17 @@ const RestaurantModal: React.FC<RestaurantModalProps> = ({ restaurant, isOpen, o
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <>
+      <MetaTags
+        title={`${restaurant.name} - ${restaurant.cuisine_type} in ${restaurant.city} | SW Florida Dines`}
+        description={`${restaurant.description.substring(0, 155)}...`}
+        image={restaurant.images[0] || restaurant.image_url}
+        url={`https://www.swfldines.com/restaurant/${restaurant.id}`}
+        type="restaurant.restaurant"
+        structuredData={generateRestaurantStructuredData(restaurant)}
+      />
+      <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
           <div className="flex items-center space-x-3">
             <h2 className="text-2xl font-bold text-gray-900">{restaurant.name}</h2>
@@ -357,6 +367,7 @@ const RestaurantModal: React.FC<RestaurantModalProps> = ({ restaurant, isOpen, o
         </div>
       </div>
     </div>
+    </>
   );
 };
 

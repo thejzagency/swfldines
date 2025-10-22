@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Phone } from 'lucide-react';
+import { MetaTags } from './MetaTags';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -16,7 +17,13 @@ export default function Contact() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <>
+      <MetaTags
+        title="Contact Us - SW Florida Dines | Get In Touch"
+        description="Have questions about SW Florida Dines? Contact us for restaurant listing inquiries, business partnerships, or general questions about dining in Southwest Florida."
+        url="https://www.swfldines.com/contact"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
         <p className="text-xl text-gray-600">
@@ -114,5 +121,6 @@ export default function Contact() {
         </div>
       </div>
     </div>
+    </>
   );
 }

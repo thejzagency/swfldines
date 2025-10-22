@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { MetaTags } from './MetaTags';
 
 interface BlogProps {
   onPostClick: (postId: string) => void;
@@ -52,7 +53,13 @@ export default function Blog({ onPostClick }: BlogProps) {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <>
+      <MetaTags
+        title="Blog - SW Florida Dines | Restaurant News & Guides"
+        description="Restaurant news, guides, and dining insights from Southwest Florida. Discover the best places to eat in Naples, Fort Myers, Cape Coral and beyond."
+        url="https://www.swfldines.com/blog"
+      />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">Blog</h1>
         <p className="text-xl text-gray-600">
@@ -103,5 +110,6 @@ export default function Blog({ onPostClick }: BlogProps) {
         </div>
       )}
     </div>
+    </>
   );
 }

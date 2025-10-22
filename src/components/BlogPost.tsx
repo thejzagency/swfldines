@@ -1,66 +1,134 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { MetaTags, generateBlogPostStructuredData } from './MetaTags';
 
 interface BlogPostProps {
   postId: string;
   onBack: () => void;
 }
 
+interface BlogPostData {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  image_url: string | null;
+  author: string;
+  published_at: string;
+  updated_at: string | null;
+}
+
 export default function BlogPost({ postId, onBack }: BlogPostProps) {
+  const [post, setPost] = useState<BlogPostData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPost() {
+      try {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .eq('id', postId)
+          .eq('status', 'published')
+          .maybeSingle();
+
+        if (error) throw error;
+        if (!data) throw new Error('Blog post not found');
+
+        setPost(data);
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPost();
+  }, [postId]);
+
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !post) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Post Not Found</h2>
+          <p className="text-gray-600 mb-6">{error || 'This blog post could not be found.'}</p>
+          <button
+            onClick={onBack}
+            className="text-blue-600 hover:text-blue-800 font-medium"
+          >
+            Back to Blog
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <button
-        onClick={onBack}
-        className="flex items-center text-gray-600 hover:text-gray-800 mb-8"
-      >
-        <ArrowLeft className="h-5 w-5 mr-2" />
-        Back to Blog
-      </button>
+    <>
+      <MetaTags
+        title={`${post.title} | SW Florida Dines Blog`}
+        description={post.excerpt}
+        image={post.image_url || undefined}
+        url={`https://www.swfldines.com/blog/${post.slug}`}
+        type="article"
+        structuredData={generateBlogPostStructuredData(post)}
+      />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <button
+          onClick={onBack}
+          className="flex items-center text-gray-600 hover:text-gray-800 mb-8"
+        >
+          <ArrowLeft className="h-5 w-5 mr-2" />
+          Back to Blog
+        </button>
 
-      <article className="bg-white rounded-lg shadow-sm p-8">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          Top 10 Waterfront Restaurants in Fort Myers
-        </h1>
+        <article className="bg-white rounded-lg shadow-sm p-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+            {post.title}
+          </h1>
 
-        <div className="flex items-center text-sm text-gray-500 space-x-4 mb-8">
-          <div className="flex items-center">
-            <User className="h-4 w-4 mr-1" />
-            SW Florida Dines
+          <div className="flex items-center text-sm text-gray-500 space-x-4 mb-8">
+            <div className="flex items-center">
+              <User className="h-4 w-4 mr-1" />
+              {post.author}
+            </div>
+            <div className="flex items-center">
+              <Calendar className="h-4 w-4 mr-1" />
+              {formatDate(post.published_at)}
+            </div>
           </div>
-          <div className="flex items-center">
-            <Calendar className="h-4 w-4 mr-1" />
-            March 15, 2024
+
+          {post.image_url && (
+            <img
+              src={post.image_url}
+              alt={post.title}
+              className="w-full h-96 object-cover rounded-lg mb-8"
+            />
+          )}
+
+          <div className="prose max-w-none">
+            <div dangerouslySetInnerHTML={{ __html: post.content }} />
           </div>
-        </div>
-
-        <img
-          src="https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=1200"
-          alt="Waterfront dining"
-          className="w-full h-96 object-cover rounded-lg mb-8"
-        />
-
-        <div className="prose max-w-none">
-          <p className="text-lg text-gray-600 mb-6">
-            Fort Myers offers some of the most spectacular waterfront dining experiences in Southwest Florida.
-            From casual dockside eateries to upscale restaurants with panoramic views, there's something for
-            every taste and occasion.
-          </p>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Why Waterfront Dining?</h2>
-          <p className="text-gray-600 mb-6">
-            There's something magical about enjoying a great meal while watching boats glide by and the sun
-            set over the water. Fort Myers' unique location along the Caloosahatchee River and Gulf of
-            Mexico provides the perfect backdrop for memorable dining experiences.
-          </p>
-
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">Our Top Picks</h2>
-          <p className="text-gray-600 mb-6">
-            We've compiled a list of the best waterfront restaurants that combine exceptional food,
-            stunning views, and outstanding service. Whether you're celebrating a special occasion or
-            just looking for a great meal with a view, these restaurants won't disappoint.
-          </p>
-        </div>
-      </article>
-    </div>
+        </article>
+      </div>
+    </>
   );
 }

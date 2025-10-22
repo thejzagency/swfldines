@@ -1,7 +1,21 @@
 import React from 'react';
 import { Check } from 'lucide-react';
+import { MetaTags } from './MetaTags';
 
 export default function ListingTierComparison() {
+  return (
+    <>
+      <MetaTags
+        title="Pricing - SW Florida Dines | Restaurant Listing Plans"
+        description="Choose the perfect plan for your restaurant. From free basic listings to premium featured placement with analytics. Plans starting at $29/month."
+        url="https://www.swfldines.com/pricing"
+      />
+      <PricingContent />
+    </>
+  );
+}
+
+function PricingContent() {
   const tiers = [
     {
       name: 'Free',

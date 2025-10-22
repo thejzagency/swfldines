@@ -1,8 +1,15 @@
 import React from 'react';
 import { MapPin, Users, Star } from 'lucide-react';
+import { MetaTags } from './MetaTags';
 
 export default function About() {
   return (
+    <>
+      <MetaTags
+        title="About Us - SW Florida Dines | Restaurant Directory"
+        description="Learn about SW Florida Dines, your comprehensive guide to discovering the best restaurants in Southwest Florida. Built by locals, for locals and visitors alike."
+        url="https://www.swfldines.com/about"
+      />
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
         <h1 className="text-4xl font-bold text-gray-900 mb-4">About SW Florida Dines</h1>
@@ -53,5 +60,6 @@ export default function About() {
         </p>
       </div>
     </div>
+    </>
   );
 }
