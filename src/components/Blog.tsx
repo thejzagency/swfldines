@@ -26,13 +26,21 @@ export default function Blog({ onPostClick }: BlogProps) {
 
   const fetchBlogPosts = async () => {
     try {
+      console.log('Fetching blog posts...');
       const { data, error } = await supabase
         .from('blog_posts')
         .select('id, title, excerpt, author, published_at, image_url')
         .eq('status', 'published')
         .order('published_at', { ascending: false });
 
-      if (error) throw error;
+      console.log('Blog posts query result:', { data, error });
+
+      if (error) {
+        console.error('Error fetching blog posts:', error);
+        throw error;
+      }
+
+      console.log('Setting blog posts:', data?.length || 0, 'posts');
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
