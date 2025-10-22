@@ -21,8 +21,9 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
   const [previewData, setPreviewData] = useState<any[]>([]);
 
   const downloadTemplate = () => {
-    const template = `name,description,cuisine_type,price_range,phone,email,website,address,city,state,zip_code,latitude,longitude,hours_monday,hours_tuesday,hours_wednesday,hours_thursday,hours_friday,hours_saturday,hours_sunday,features,images,menu_url,facebook_url,instagram_url,twitter_url,linkedin_url,youtube_url
-"Sample Restaurant","Delicious authentic Italian cuisine in the heart of the city","Italian","$$","(239) 555-1234","info@samplerestaurant.com","https://www.samplerestaurant.com","123 Main Street","Fort Myers","FL","33901","26.6406","-81.8723","11:00 AM - 10:00 PM","11:00 AM - 10:00 PM","11:00 AM - 10:00 PM","11:00 AM - 10:00 PM","11:00 AM - 11:00 PM","11:00 AM - 11:00 PM","12:00 PM - 9:00 PM","Outdoor Seating|Delivery Available|Reservations|Family Friendly","https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg","https://www.samplerestaurant.com/menu","https://facebook.com/samplerestaurant","https://instagram.com/samplerestaurant","https://twitter.com/samplerest","https://linkedin.com/company/samplerestaurant","https://youtube.com/@samplerestaurant"`;
+    const template = `name,cuisine_type,phone,email,address,city,state,zip_code
+"Sample Restaurant","Italian","(239) 555-1234","contact@samplerestaurant.com","123 Main Street","Fort Myers","FL","33901"
+"Another Example","Mexican","(239) 555-5678","info@anotherexample.com","456 Beach Blvd","Naples","FL","34102"`;
 
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -102,41 +103,29 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
 
       for (const row of rows) {
         try {
-          const hours: any = {};
-          if (row.hours_monday) hours.monday = row.hours_monday;
-          if (row.hours_tuesday) hours.tuesday = row.hours_tuesday;
-          if (row.hours_wednesday) hours.wednesday = row.hours_wednesday;
-          if (row.hours_thursday) hours.thursday = row.hours_thursday;
-          if (row.hours_friday) hours.friday = row.hours_friday;
-          if (row.hours_saturday) hours.saturday = row.hours_saturday;
-          if (row.hours_sunday) hours.sunday = row.hours_sunday;
-
-          const features = row.features ? row.features.split('|').map((f: string) => f.trim()) : [];
-          const images = row.images ? row.images.split('|').map((i: string) => i.trim()) : [];
-
           const restaurantData = {
             name: row.name,
-            description: row.description || '',
             cuisine_type: row.cuisine_type || '',
-            price_range: row.price_range || '$',
             phone: row.phone || '',
             email: row.email || '',
-            website: row.website || '',
             address: row.address || '',
             city: row.city || '',
             state: row.state || 'FL',
             zip_code: row.zip_code || '',
-            latitude: row.latitude ? parseFloat(row.latitude) : null,
-            longitude: row.longitude ? parseFloat(row.longitude) : null,
-            hours,
-            features,
-            images,
-            menu_url: row.menu_url || '',
-            facebook_url: row.facebook_url || '',
-            instagram_url: row.instagram_url || '',
-            twitter_url: row.twitter_url || '',
-            linkedin_url: row.linkedin_url || '',
-            youtube_url: row.youtube_url || '',
+            description: '',
+            price_range: '$',
+            website: '',
+            latitude: null,
+            longitude: null,
+            hours: {},
+            features: [],
+            images: [],
+            menu_url: '',
+            facebook_url: '',
+            instagram_url: '',
+            twitter_url: '',
+            linkedin_url: '',
+            youtube_url: '',
             listing_type: 'free',
             owner_claimed: false,
             status: 'active'
