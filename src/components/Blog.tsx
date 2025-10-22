@@ -1,38 +1,56 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, User } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 interface BlogProps {
   onPostClick: (postId: string) => void;
 }
 
-const blogPosts = [
-  {
-    id: '1',
-    title: 'Top 10 Waterfront Restaurants in Fort Myers',
-    excerpt: 'Discover the best dining experiences with stunning water views...',
-    author: 'SW Florida Dines',
-    date: '2024-03-15',
-    image: 'https://images.pexels.com/photos/941861/pexels-photo-941861.jpeg?auto=compress&cs=tinysrgb&w=800'
-  },
-  {
-    id: '2',
-    title: 'Naples Fine Dining Guide',
-    excerpt: 'Explore the upscale dining scene in Naples with our comprehensive guide...',
-    author: 'SW Florida Dines',
-    date: '2024-03-10',
-    image: 'https://images.pexels.com/photos/696218/pexels-photo-696218.jpeg?auto=compress&cs=tinysrgb&w=800'
-  },
-  {
-    id: '3',
-    title: 'Best Breakfast Spots in Cape Coral',
-    excerpt: 'Start your day right at these amazing breakfast restaurants...',
-    author: 'SW Florida Dines',
-    date: '2024-03-05',
-    image: 'https://images.pexels.com/photos/1268558/pexels-photo-1268558.jpeg?auto=compress&cs=tinysrgb&w=800'
-  }
-];
+interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  author: string;
+  published_at: string;
+  image_url: string;
+}
 
 export default function Blog({ onPostClick }: BlogProps) {
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchBlogPosts();
+  }, []);
+
+  const fetchBlogPosts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('id, title, excerpt, author, published_at, image_url')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false });
+
+      if (error) throw error;
+      setBlogPosts(data || []);
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-600 mt-4">Loading blog posts...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="text-center mb-12">
@@ -42,37 +60,48 @@ export default function Blog({ onPostClick }: BlogProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {blogPosts.map((post) => (
-          <article
-            key={post.id}
-            onClick={() => onPostClick(post.id)}
-            className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
-          >
-            <img
-              src={post.image}
-              alt={post.title}
-              className="w-full h-48 object-cover"
-            />
-            <div className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600">
-                {post.title}
-              </h2>
-              <p className="text-gray-600 mb-4">{post.excerpt}</p>
-              <div className="flex items-center text-sm text-gray-500 space-x-4">
-                <div className="flex items-center">
-                  <User className="h-4 w-4 mr-1" />
-                  {post.author}
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="h-4 w-4 mr-1" />
-                  {post.date}
+      {blogPosts.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">No blog posts yet. Check back soon!</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {blogPosts.map((post) => (
+            <article
+              key={post.id}
+              onClick={() => onPostClick(post.id)}
+              className="bg-white rounded-lg shadow-sm overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+            >
+              {post.image_url && (
+                <img
+                  src={post.image_url}
+                  alt={post.title}
+                  className="w-full h-48 object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=800';
+                  }}
+                />
+              )}
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600">
+                  {post.title}
+                </h2>
+                <p className="text-gray-600 mb-4">{post.excerpt}</p>
+                <div className="flex items-center text-sm text-gray-500 space-x-4">
+                  <div className="flex items-center">
+                    <User className="h-4 w-4 mr-1" />
+                    {post.author}
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="h-4 w-4 mr-1" />
+                    {post.published_at ? new Date(post.published_at).toLocaleDateString() : ''}
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-        ))}
-      </div>
+            </article>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
