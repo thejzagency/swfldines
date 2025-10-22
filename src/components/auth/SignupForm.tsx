@@ -34,16 +34,20 @@ export function SignupForm({ onSuccess, onSwitchToLogin }: SignupFormProps) {
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: undefined, // Disable email confirmation
+          emailRedirectTo: `${window.location.origin}`,
         },
       });
 
       if (error) {
         setError(error.message);
+      } else if (data.user && !data.session) {
+        setError(null);
+        alert('Success! Please check your email to confirm your account before signing in.');
+        onSuccess?.();
       } else {
         onSuccess?.();
       }
