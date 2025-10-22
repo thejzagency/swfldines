@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import CSVUploader from './CSVUploader';
+import BlogManager from './BlogManager';
 import {
   ArrowLeft,
   Check,
@@ -17,7 +18,8 @@ import {
   Filter,
   Download,
   RefreshCw,
-  Upload
+  Upload,
+  FileText
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -25,7 +27,7 @@ interface AdminDashboardProps {
   onLogout: () => void;
 }
 
-type AdminView = 'overview' | 'restaurants' | 'users' | 'subscriptions' | 'analytics' | 'csv_upload';
+type AdminView = 'overview' | 'restaurants' | 'users' | 'subscriptions' | 'analytics' | 'csv_upload' | 'blog';
 
 export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) {
   const [currentView, setCurrentView] = useState<AdminView>('overview');
@@ -38,7 +40,11 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
     pendingRestaurants: 0,
     totalUsers: 0,
     activeSubscriptions: 0,
-    monthlyRevenue: 0
+    monthlyRevenue: 0,
+    totalViews: 0,
+    totalClicks: 0,
+    viewsLast30Days: 0,
+    clicksLast30Days: 0
   });
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,6 +127,27 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
         .from('stripe_subscriptions')
         .select('status');
 
+      const { count: totalViews } = await supabase
+        .from('restaurant_views')
+        .select('*', { count: 'exact', head: true });
+
+      const { count: totalClicks } = await supabase
+        .from('restaurant_clicks')
+        .select('*', { count: 'exact', head: true });
+
+      const thirtyDaysAgo = new Date();
+      thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+      const { count: viewsLast30Days } = await supabase
+        .from('restaurant_views')
+        .select('*', { count: 'exact', head: true })
+        .gte('viewed_at', thirtyDaysAgo.toISOString());
+
+      const { count: clicksLast30Days } = await supabase
+        .from('restaurant_clicks')
+        .select('*', { count: 'exact', head: true })
+        .gte('clicked_at', thirtyDaysAgo.toISOString());
+
       const totalRestaurants = restaurantData?.length || 0;
       const activeRestaurants = restaurantData?.filter(r => r.status === 'active').length || 0;
       const pendingRestaurants = restaurantData?.filter(r => r.status === 'pending').length || 0;
@@ -133,7 +160,11 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
         pendingRestaurants,
         totalUsers,
         activeSubscriptions,
-        monthlyRevenue: activeSubscriptions * 49.99
+        monthlyRevenue: activeSubscriptions * 49.99,
+        totalViews: totalViews || 0,
+        totalClicks: totalClicks || 0,
+        viewsLast30Days: viewsLast30Days || 0,
+        clicksLast30Days: clicksLast30Days || 0
       });
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -312,6 +343,32 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
               </p>
             </div>
             <DollarSign className="h-12 w-12 text-yellow-600" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg shadow-sm p-6">
+        <h3 className="text-lg font-semibold mb-4 text-gray-900">Site-Wide Analytics</h3>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="bg-white p-4 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Total Views</p>
+            <p className="text-2xl font-bold text-gray-900">{stats.totalViews.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">All-time</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Total Clicks</p>
+            <p className="text-2xl font-bold text-gray-900">{stats.totalClicks.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">All-time</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Views (30d)</p>
+            <p className="text-2xl font-bold text-green-600">{stats.viewsLast30Days.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">Last 30 days</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg">
+            <p className="text-sm text-gray-600 mb-1">Clicks (30d)</p>
+            <p className="text-2xl font-bold text-green-600">{stats.clicksLast30Days.toLocaleString()}</p>
+            <p className="text-xs text-gray-500 mt-1">Last 30 days</p>
           </div>
         </div>
       </div>
@@ -635,6 +692,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
               { id: 'overview', label: 'Overview', icon: BarChart3 },
               { id: 'restaurants', label: 'Restaurants', icon: Building },
               { id: 'csv_upload', label: 'CSV Upload', icon: Upload },
+              { id: 'blog', label: 'Blog', icon: FileText },
               { id: 'users', label: 'Users', icon: Users },
               { id: 'subscriptions', label: 'Subscriptions', icon: DollarSign }
             ].map(({ id, label, icon: Icon }) => (
@@ -664,6 +722,7 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
             {currentView === 'overview' && renderOverview()}
             {currentView === 'restaurants' && renderRestaurants()}
             {currentView === 'csv_upload' && <CSVUploader onUploadComplete={fetchAllData} />}
+            {currentView === 'blog' && <BlogManager />}
             {currentView === 'users' && renderUsers()}
             {currentView === 'subscriptions' && renderSubscriptions()}
           </>
