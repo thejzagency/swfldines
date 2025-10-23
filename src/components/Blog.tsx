@@ -27,8 +27,9 @@ export default function Blog({ onPostClick }: BlogProps) {
   const fetchBlogPosts = async () => {
     try {
       console.log('Fetching blog posts via Edge Function...');
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+      // HARDCODED - Production database: wiosivnwuqroaoqojlse
+      const supabaseUrl = 'https://wiosivnwuqroaoqojlse.supabase.co';
+      const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indpb3Npdm53dXFyb2FvcW9qbHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NDAyMTcsImV4cCI6MjA3NTUxNjIxN30.EInS_XMnQlyxJ8o6h1V_1RUbyFTQA7JSvulODMMUxaw';
       const apiUrl = `${supabaseUrl}/functions/v1/get-blog-posts`;
 
       const response = await fetch(apiUrl, {
