@@ -26,18 +26,22 @@ export default function Blog({ onPostClick }: BlogProps) {
 
   const fetchBlogPosts = async () => {
     try {
-      console.log('Fetching blog posts via RPC function...');
-      const { data, error } = await supabase
-        .rpc('get_published_blog_posts');
+      console.log('Fetching blog posts via Edge Function...');
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const apiUrl = `${supabaseUrl}/functions/v1/get-blog-posts`;
 
-      console.log('Blog posts RPC result:', { data, error });
+      const response = await fetch(apiUrl, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-      if (error) {
-        console.error('Error fetching blog posts:', error);
-        throw error;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      console.log('Setting blog posts:', data?.length || 0, 'posts');
+      const data = await response.json();
+      console.log('Blog posts from Edge Function:', data?.length || 0, 'posts');
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
