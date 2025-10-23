@@ -28,11 +28,13 @@ export default function Blog({ onPostClick }: BlogProps) {
     try {
       console.log('Fetching blog posts via Edge Function...');
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       const apiUrl = `${supabaseUrl}/functions/v1/get-blog-posts`;
 
       const response = await fetch(apiUrl, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${anonKey}`,
         },
       });
 
