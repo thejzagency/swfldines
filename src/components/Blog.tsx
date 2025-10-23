@@ -26,16 +26,20 @@ export default function Blog({ onPostClick }: BlogProps) {
 
   const fetchBlogPosts = async () => {
     try {
-      console.log('Fetching blog posts via RPC function...');
+      console.log('Fetching blog posts directly from table...');
 
-      const { data, error } = await supabase.rpc('get_published_blog_posts');
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('id, title, excerpt, author, published_at, image_url')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false });
 
       if (error) {
-        console.error('Supabase RPC error:', error);
+        console.error('Supabase error:', error);
         throw error;
       }
 
-      console.log('Blog posts from RPC:', data?.length || 0, 'posts');
+      console.log('Blog posts fetched:', data?.length || 0, 'posts');
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
