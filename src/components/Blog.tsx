@@ -26,25 +26,20 @@ export default function Blog({ onPostClick }: BlogProps) {
 
   const fetchBlogPosts = async () => {
     try {
-      console.log('Fetching blog posts via Edge Function...');
-      // HARDCODED - Production database: wiosivnwuqroaoqojlse
-      const supabaseUrl = 'https://wiosivnwuqroaoqojlse.supabase.co';
-      const anonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indpb3Npdm53dXFyb2FvcW9qbHNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk5NDAyMTcsImV4cCI6MjA3NTUxNjIxN30.EInS_XMnQlyxJ8o6h1V_1RUbyFTQA7JSvulODMMUxaw';
-      const apiUrl = `${supabaseUrl}/functions/v1/get-blog-posts`;
+      console.log('Fetching blog posts directly from database...');
 
-      const response = await fetch(apiUrl, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${anonKey}`,
-        },
-      });
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select('id, title, excerpt, author, published_at, image_url')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
 
-      const data = await response.json();
-      console.log('Blog posts from Edge Function:', data?.length || 0, 'posts');
+      console.log('Blog posts from database:', data?.length || 0, 'posts');
       setBlogPosts(data || []);
     } catch (error) {
       console.error('Error fetching blog posts:', error);
