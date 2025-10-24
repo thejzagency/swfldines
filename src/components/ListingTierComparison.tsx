@@ -70,7 +70,7 @@ function PricingContent() {
       price: '$29',
       period: 'per month',
       priceId: 'price_1S6H4HGMtBdGqLf3YTPzUtzF',
-      slotsTotal: 50,
+      slotsTotal: 100,
       features: [
         'Everything in Free',
         '5 photo gallery images',
@@ -87,7 +87,7 @@ function PricingContent() {
       period: 'per month',
       priceId: 'price_1S6H4zGMtBdGqLf3yIbZ572d',
       popular: true,
-      slotsTotal: 20,
+      slotsTotal: 50,
       features: [
         'Everything in Featured',
         '15 photo gallery images',
@@ -103,7 +103,7 @@ function PricingContent() {
       price: '$99',
       period: 'per month',
       priceId: 'price_1S6H5oGMtBdGqLf3O3L2mvrY',
-      slotsTotal: 5,
+      slotsTotal: 15,
       features: [
         'Everything in Premium',
         'Unlimited photo gallery',
@@ -152,21 +152,46 @@ function PricingContent() {
                   const slotsRemaining = tier.slotsTotal - slotsUsed;
                   const percentFull = (slotsUsed / tier.slotsTotal) * 100;
 
+                  // Only show urgency if there's actual demand (at least 5 subscribers)
+                  const hasEnoughDemand = slotsUsed >= 5;
+
+                  // Determine status based on demand and remaining slots
+                  let status: 'critical' | 'warning' | 'available' = 'available';
+                  let statusText = 'Available';
+
+                  if (hasEnoughDemand) {
+                    if (slotsRemaining <= 3) {
+                      status = 'critical';
+                      statusText = 'Almost Full!';
+                    } else if (slotsRemaining <= 10) {
+                      status = 'warning';
+                      statusText = 'Filling Fast';
+                    }
+                  }
+
+                  const statusColors = {
+                    critical: {
+                      bg: 'bg-red-50 border border-red-200',
+                      text: 'text-red-800',
+                      bar: 'bg-red-600'
+                    },
+                    warning: {
+                      bg: 'bg-yellow-50 border border-yellow-200',
+                      text: 'text-yellow-800',
+                      bar: 'bg-yellow-600'
+                    },
+                    available: {
+                      bg: 'bg-green-50 border border-green-200',
+                      text: 'text-green-800',
+                      bar: 'bg-green-600'
+                    }
+                  };
+
                   return (
-                    <div className={`p-3 rounded-lg ${
-                      slotsRemaining <= 3 ? 'bg-red-50 border border-red-200' :
-                      slotsRemaining <= 10 ? 'bg-yellow-50 border border-yellow-200' :
-                      'bg-green-50 border border-green-200'
-                    }`}>
+                    <div className={`p-3 rounded-lg ${statusColors[status].bg}`}>
                       <div className="flex items-center justify-between mb-2">
-                        <span className={`text-xs font-semibold ${
-                          slotsRemaining <= 3 ? 'text-red-800' :
-                          slotsRemaining <= 10 ? 'text-yellow-800' :
-                          'text-green-800'
-                        }`}>
-                          {slotsRemaining <= 3 ? 'Almost Full!' :
-                           slotsRemaining <= 10 ? 'Filling Fast' :
-                           'Available'}
+                        <span className={`text-xs font-semibold ${statusColors[status].text}`}>
+                          {statusText}
                         </span>
                         <span className="text-xs font-medium text-gray-600">
                           {slotsRemaining} of {tier.slotsTotal} left
@@ -174,11 +199,7 @@ function PricingContent() {
                       </div>
                       <div className="w-full bg-gray-200 rounded-full h-2">
                         <div
-                          className={`h-2 rounded-full ${
-                            slotsRemaining <= 3 ? 'bg-red-600' :
-                            slotsRemaining <= 10 ? 'bg-yellow-600' :
-                            'bg-green-600'
-                          }`}
+                          className={`h-2 rounded-full ${statusColors[status].bar}`}
                           style={{ width: `${percentFull}%` }}
                         />
                       </div>
