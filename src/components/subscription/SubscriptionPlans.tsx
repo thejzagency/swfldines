@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { stripeProducts } from '../../stripe-config';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
+import { env } from '../../config/env';
 import { Check, Crown, Star, Zap } from 'lucide-react';
 
 interface SubscriptionPlansProps {
@@ -29,7 +30,7 @@ export function SubscriptionPlans({ onSuccess }: SubscriptionPlansProps) {
         return;
       }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`, {
+      const response = await fetch(`${env.supabaseUrl}/functions/v1/stripe-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
