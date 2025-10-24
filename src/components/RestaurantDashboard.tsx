@@ -15,6 +15,7 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
   const [loading, setLoading] = useState(true);
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [restaurantToUpgrade, setRestaurantToUpgrade] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<'analytics' | 'images'>('analytics');
 
   useEffect(() => {
@@ -39,19 +40,31 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
   };
 
   if (showUpgrade) {
+    const restaurantBeingUpgraded = restaurants.find(r => r.id === restaurantToUpgrade) || restaurants[0];
+
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-6">
             <button
-              onClick={() => setShowUpgrade(false)}
+              onClick={() => {
+                setShowUpgrade(false);
+                setRestaurantToUpgrade(null);
+              }}
               className="flex items-center text-gray-600 hover:text-gray-800 mb-4"
             >
               <ArrowLeft className="h-5 w-5 mr-2" />
               Back to My Restaurants
             </button>
+            {restaurantBeingUpgraded && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-800">
+                  <span className="font-semibold">Upgrading:</span> {restaurantBeingUpgraded.name} ({restaurantBeingUpgraded.city})
+                </p>
+              </div>
+            )}
           </div>
-          <StripeCheckout user={user} restaurantId={restaurants[0]?.id} />
+          <StripeCheckout user={user} restaurantId={restaurantToUpgrade || restaurants[0]?.id} />
         </div>
       </div>
     );
@@ -119,6 +132,7 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
               restaurantId={selectedRestaurant.id}
               listingType={selectedRestaurant.listing_type}
               onUpgrade={() => {
+                setRestaurantToUpgrade(selectedRestaurant.id);
                 setSelectedRestaurant(null);
                 setShowUpgrade(true);
               }}
@@ -178,7 +192,10 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
                     <p className="text-blue-100">Get more visibility with Featured, Premium, or Spotlight plans</p>
                   </div>
                   <button
-                    onClick={() => setShowUpgrade(true)}
+                    onClick={() => {
+                      setRestaurantToUpgrade(restaurants.find(r => r.listing_type === 'free')?.id || restaurants[0]?.id);
+                      setShowUpgrade(true);
+                    }}
                     className="bg-white text-blue-600 hover:bg-blue-50 px-6 py-3 rounded-lg font-semibold transition-colors"
                   >
                     Upgrade Now
@@ -206,21 +223,35 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
                        restaurant.listing_type === 'featured' ? 'Featured' : 'Free'}
                     </span>
                   </div>
-                  <div className="flex items-center justify-between">
-                    <span className={`px-3 py-1 rounded-full text-sm ${
-                      restaurant.status === 'active' ? 'bg-green-100 text-green-800' :
-                      restaurant.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {restaurant.status}
-                    </span>
-                    <button
-                      onClick={() => setSelectedRestaurant(restaurant)}
-                      className="flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm"
-                    >
-                      <BarChart3 className="h-4 w-4 mr-1" />
-                      Analytics
-                    </button>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className={`px-3 py-1 rounded-full text-sm ${
+                        restaurant.status === 'active' ? 'bg-green-100 text-green-800' :
+                        restaurant.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {restaurant.status}
+                      </span>
+                      <button
+                        onClick={() => setSelectedRestaurant(restaurant)}
+                        className="flex items-center text-blue-600 hover:text-blue-800 font-medium text-sm"
+                      >
+                        <BarChart3 className="h-4 w-4 mr-1" />
+                        Manage
+                      </button>
+                    </div>
+                    {restaurant.listing_type === 'free' && (
+                      <button
+                        onClick={() => {
+                          setRestaurantToUpgrade(restaurant.id);
+                          setShowUpgrade(true);
+                        }}
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-2 px-4 rounded-lg font-medium text-sm transition-colors flex items-center justify-center"
+                      >
+                        <Crown className="h-4 w-4 mr-1" />
+                        Upgrade This Listing
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
