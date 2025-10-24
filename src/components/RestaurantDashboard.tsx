@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Edit, Trash2, BarChart3, Crown, Image } from 'lucide-r
 import AnalyticsDashboard from './AnalyticsDashboard';
 import StripeCheckout from './StripeCheckout';
 import { ImageUploader } from './ImageUploader';
+import RestaurantEditForm from './RestaurantEditForm';
 
 interface RestaurantDashboardProps {
   user: any;
@@ -16,7 +17,7 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
   const [selectedRestaurant, setSelectedRestaurant] = useState<any>(null);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [restaurantToUpgrade, setRestaurantToUpgrade] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'analytics' | 'images'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'images' | 'edit'>('analytics');
 
   useEffect(() => {
     fetchMyRestaurants();
@@ -123,11 +124,24 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
                     Photos
                   </div>
                 </button>
+                <button
+                  onClick={() => setActiveTab('edit')}
+                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                    activeTab === 'edit'
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit Details
+                  </div>
+                </button>
               </nav>
             </div>
           </div>
 
-          {activeTab === 'analytics' ? (
+          {activeTab === 'analytics' && (
             <AnalyticsDashboard
               restaurantId={selectedRestaurant.id}
               listingType={selectedRestaurant.listing_type}
@@ -137,13 +151,25 @@ export default function RestaurantDashboard({ user, onBack }: RestaurantDashboar
                 setShowUpgrade(true);
               }}
             />
-          ) : (
+          )}
+          {activeTab === 'images' && (
             <div className="bg-white rounded-lg shadow-sm p-6">
               <ImageUploader
                 restaurantId={selectedRestaurant.id}
                 currentImages={selectedRestaurant.images || []}
                 listingType={selectedRestaurant.listing_type}
                 onImagesUpdate={handleImagesUpdate}
+              />
+            </div>
+          )}
+          {activeTab === 'edit' && (
+            <div className="bg-white rounded-lg shadow-sm p-6">
+              <RestaurantEditForm
+                restaurant={selectedRestaurant}
+                onUpdate={(updated) => {
+                  setSelectedRestaurant(updated);
+                  fetchMyRestaurants();
+                }}
               />
             </div>
           )}
