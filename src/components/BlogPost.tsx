@@ -25,7 +25,6 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [htmlContent, setHtmlContent] = useState('');
 
   useEffect(() => {
     async function fetchPost() {
@@ -41,9 +40,6 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
         if (!data) throw new Error('Blog post not found');
 
         setPost(data);
-
-        const html = await marked(data.content);
-        setHtmlContent(html as string);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -53,6 +49,8 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
 
     fetchPost();
   }, [postId]);
+
+  const htmlContent = post ? marked(post.content) : '';
 
   if (loading) {
     return (
@@ -129,7 +127,7 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
             />
           )}
 
-          <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-gray-700 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
+          <div className="prose prose-lg max-w-none">
             <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
           </div>
         </article>
