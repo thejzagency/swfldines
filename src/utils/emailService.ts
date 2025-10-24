@@ -25,7 +25,8 @@ interface EmailTemplate {
 export class EmailService {
   private static FROM_EMAIL = 'admin@swfldines.com';
   private static FROM_NAME = 'SW Florida Dines';
-  private static ADMIN_EMAIL = 'jimzimmermann@gmail.com';
+  private static ADMIN_EMAIL = 'admin@swfldines.com';
+  private static CLAIM_NOTIFICATION_EMAIL = 'jimzimmermann@gmail.com';
 
   static async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
@@ -261,7 +262,7 @@ export class EmailService {
 
     return await this.sendFromTemplate(
       'admin_restaurant_claimed',
-      this.ADMIN_EMAIL,
+      this.CLAIM_NOTIFICATION_EMAIL,
       {
         restaurant_name: restaurantName,
         owner_email: ownerEmail,
