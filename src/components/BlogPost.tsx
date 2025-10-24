@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { MetaTags, generateBlogPostStructuredData } from './MetaTags';
@@ -25,6 +25,7 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
   const [post, setPost] = useState<BlogPostData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [htmlContent, setHtmlContent] = useState('');
 
   useEffect(() => {
     async function fetchPost() {
@@ -40,6 +41,9 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
         if (!data) throw new Error('Blog post not found');
 
         setPost(data);
+
+        const html = await marked(data.content);
+        setHtmlContent(html as string);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -81,11 +85,6 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
-
-  const htmlContent = useMemo(() => {
-    if (!post?.content) return '';
-    return marked(post.content);
-  }, [post?.content]);
 
   return (
     <>
