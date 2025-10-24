@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { ArrowLeft, Calendar, User } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { MetaTags, generateBlogPostStructuredData } from './MetaTags';
+import { marked } from 'marked';
 
 interface BlogPostProps {
   postId: string;
@@ -81,6 +82,11 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   };
 
+  const htmlContent = useMemo(() => {
+    if (!post?.content) return '';
+    return marked(post.content);
+  }, [post?.content]);
+
   return (
     <>
       <MetaTags
@@ -124,8 +130,8 @@ export default function BlogPost({ postId, onBack }: BlogPostProps) {
             />
           )}
 
-          <div className="prose max-w-none">
-            <div dangerouslySetInnerHTML={{ __html: post.content }} />
+          <div className="prose prose-lg max-w-none prose-headings:text-gray-900 prose-h1:text-3xl prose-h1:font-bold prose-h1:mb-4 prose-h2:text-2xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4 prose-li:text-gray-700 prose-strong:text-gray-900 prose-strong:font-semibold prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline">
+            <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
           </div>
         </article>
       </div>
