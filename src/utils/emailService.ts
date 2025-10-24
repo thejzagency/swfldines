@@ -25,7 +25,7 @@ interface EmailTemplate {
 export class EmailService {
   private static FROM_EMAIL = 'admin@swfldines.com';
   private static FROM_NAME = 'SW Florida Dines';
-  private static ADMIN_EMAIL = 'admin@swfldines.com';
+  private static ADMIN_EMAIL = 'jimzimmermann@gmail.com';
 
   static async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
