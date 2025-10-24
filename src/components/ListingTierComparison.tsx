@@ -146,66 +146,11 @@ function PricingContent() {
             </div>
             {tier.slotsTotal && !loading && (
               <div className="mb-6">
-                {(() => {
-                  const tierKey = tier.name.toLowerCase().replace(' ', '_').replace('spotlight', 'premium_plus');
-                  const slotsUsed = slotCounts[tierKey] || 0;
-                  const slotsRemaining = tier.slotsTotal - slotsUsed;
-                  const percentFull = (slotsUsed / tier.slotsTotal) * 100;
-
-                  // Only show urgency if there's actual demand (at least 5 subscribers)
-                  const hasEnoughDemand = slotsUsed >= 5;
-
-                  // Determine status based on demand and remaining slots
-                  let status: 'critical' | 'warning' | 'available' = 'available';
-                  let statusText = 'Available';
-
-                  if (hasEnoughDemand) {
-                    if (slotsRemaining <= 3) {
-                      status = 'critical';
-                      statusText = 'Almost Full!';
-                    } else if (slotsRemaining <= 10) {
-                      status = 'warning';
-                      statusText = 'Filling Fast';
-                    }
-                  }
-
-                  const statusColors = {
-                    critical: {
-                      bg: 'bg-red-50 border border-red-200',
-                      text: 'text-red-800',
-                      bar: 'bg-red-600'
-                    },
-                    warning: {
-                      bg: 'bg-yellow-50 border border-yellow-200',
-                      text: 'text-yellow-800',
-                      bar: 'bg-yellow-600'
-                    },
-                    available: {
-                      bg: 'bg-green-50 border border-green-200',
-                      text: 'text-green-800',
-                      bar: 'bg-green-600'
-                    }
-                  };
-
-                  return (
-                    <div className={`p-3 rounded-lg ${statusColors[status].bg}`}>
-                      <div className="flex items-center justify-between mb-2">
-                        <span className={`text-xs font-semibold ${statusColors[status].text}`}>
-                          {statusText}
-                        </span>
-                        <span className="text-xs font-medium text-gray-600">
-                          {slotsRemaining} of {tier.slotsTotal} left
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div
-                          className={`h-2 rounded-full ${statusColors[status].bar}`}
-                          style={{ width: `${percentFull}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })()}
+                <div className="p-3 rounded-lg bg-green-50 border border-green-200">
+                  <span className="text-sm font-semibold text-green-800">
+                    Spots Available
+                  </span>
+                </div>
               </div>
             )}
             <ul className="space-y-3 mb-8">
