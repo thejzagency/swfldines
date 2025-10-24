@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Save, X } from 'lucide-react';
+import { Save, X, Crown, Lock } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 interface RestaurantEditFormProps {
@@ -9,6 +9,14 @@ interface RestaurantEditFormProps {
 
 export default function RestaurantEditForm({ restaurant, onUpdate }: RestaurantEditFormProps) {
   const [loading, setLoading] = useState(false);
+  const listingType = restaurant.listing_type || 'free';
+
+  const hasDescriptionAccess = ['featured', 'premium', 'premium_plus'].includes(listingType);
+  const hasWebsiteAccess = ['featured', 'premium', 'premium_plus'].includes(listingType);
+  const hasSocialAccess = ['featured', 'premium', 'premium_plus'].includes(listingType);
+  const hasMenuUrlAccess = ['featured', 'premium', 'premium_plus'].includes(listingType);
+  const hasFeaturesAccess = ['premium', 'premium_plus'].includes(listingType);
+
   const [formData, setFormData] = useState({
     name: restaurant.name || '',
     description: restaurant.description || '',
@@ -64,26 +72,41 @@ export default function RestaurantEditForm({ restaurant, onUpdate }: RestaurantE
         ? formData.features.split(',').map(f => f.trim()).filter(Boolean)
         : [];
 
-      const updateData = {
+      const updateData: any = {
         name: formData.name,
-        description: formData.description || '',
         cuisine_type: formData.cuisine_type || '',
         price_range: formData.price_range,
         phone: formData.phone || '',
         email: formData.email || '',
-        website: formData.website || '',
         address: formData.address,
         city: formData.city,
         state: formData.state,
         zip_code: formData.zip_code || '',
         hours,
-        features,
-        menu_url: formData.menu_url || '',
-        facebook_url: formData.facebook_url || '',
-        instagram_url: formData.instagram_url || '',
-        twitter_url: formData.twitter_url || '',
         updated_at: new Date().toISOString()
       };
+
+      if (hasDescriptionAccess) {
+        updateData.description = formData.description || '';
+      }
+
+      if (hasWebsiteAccess) {
+        updateData.website = formData.website || '';
+      }
+
+      if (hasSocialAccess) {
+        updateData.facebook_url = formData.facebook_url || '';
+        updateData.instagram_url = formData.instagram_url || '';
+        updateData.twitter_url = formData.twitter_url || '';
+      }
+
+      if (hasMenuUrlAccess) {
+        updateData.menu_url = formData.menu_url || '';
+      }
+
+      if (hasFeaturesAccess) {
+        updateData.features = features;
+      }
 
       const { data, error } = await supabase
         .from('restaurants')
@@ -104,11 +127,41 @@ export default function RestaurantEditForm({ restaurant, onUpdate }: RestaurantE
     }
   };
 
+  const LockedField = ({ children, locked, requiredTier }: { children: React.ReactNode; locked: boolean; requiredTier: string }) => {
+    if (!locked) return <>{children}</>;
+
+    return (
+      <div className="relative">
+        <div className="pointer-events-none opacity-50">
+          {children}
+        </div>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900 bg-opacity-5 rounded-lg">
+          <div className="bg-white px-4 py-2 rounded-lg shadow-lg border-2 border-blue-600">
+            <div className="flex items-center space-x-2 text-sm">
+              <Crown className="h-4 w-4 text-blue-600" />
+              <span className="font-semibold text-gray-900">Upgrade to {requiredTier}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Edit Restaurant Details</h2>
         <p className="text-gray-600 mb-6">Update your restaurant information below</p>
+        {listingType === 'free' && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center space-x-2">
+              <Crown className="h-5 w-5 text-blue-600" />
+              <p className="text-sm text-blue-800">
+                <span className="font-semibold">Free Tier:</span> Some fields are locked. Upgrade to Featured or higher to access all features.
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -186,34 +239,40 @@ export default function RestaurantEditForm({ restaurant, onUpdate }: RestaurantE
           />
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Website
-          </label>
-          <input
-            type="url"
-            name="website"
-            value={formData.website}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://restaurant.com"
-          />
-        </div>
+        <LockedField locked={!hasWebsiteAccess} requiredTier="Featured">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Website {!hasWebsiteAccess && <Lock className="inline h-3 w-3 ml-1" />}
+            </label>
+            <input
+              type="url"
+              name="website"
+              value={formData.website}
+              onChange={handleChange}
+              disabled={!hasWebsiteAccess}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              placeholder="https://restaurant.com"
+            />
+          </div>
+        </LockedField>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Description
-        </label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          placeholder="Tell us about this restaurant..."
-        />
-      </div>
+      <LockedField locked={!hasDescriptionAccess} requiredTier="Featured">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Description {!hasDescriptionAccess && <Lock className="inline h-3 w-3 ml-1" />}
+          </label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            disabled={!hasDescriptionAccess}
+            rows={4}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+            placeholder="Tell us about this restaurant..."
+          />
+        </div>
+      </LockedField>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
@@ -296,76 +355,91 @@ export default function RestaurantEditForm({ restaurant, onUpdate }: RestaurantE
         </div>
       </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Features (comma-separated)
-        </label>
-        <input
-          type="text"
-          name="features"
-          value={formData.features}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-          placeholder="Outdoor Seating, Delivery, Reservations"
-        />
-      </div>
+      <LockedField locked={!hasFeaturesAccess} requiredTier="Premium">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Features (comma-separated) {!hasFeaturesAccess && <Lock className="inline h-3 w-3 ml-1" />}
+          </label>
+          <input
+            type="text"
+            name="features"
+            value={formData.features}
+            onChange={handleChange}
+            disabled={!hasFeaturesAccess}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+            placeholder="Outdoor Seating, Delivery, Reservations"
+          />
+        </div>
+      </LockedField>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Menu URL
-          </label>
-          <input
-            type="url"
-            name="menu_url"
-            value={formData.menu_url}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://restaurant.com/menu"
-          />
-        </div>
+        <LockedField locked={!hasMenuUrlAccess} requiredTier="Featured">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Menu URL {!hasMenuUrlAccess && <Lock className="inline h-3 w-3 ml-1" />}
+            </label>
+            <input
+              type="url"
+              name="menu_url"
+              value={formData.menu_url}
+              onChange={handleChange}
+              disabled={!hasMenuUrlAccess}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              placeholder="https://restaurant.com/menu"
+            />
+          </div>
+        </LockedField>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Facebook URL
-          </label>
-          <input
-            type="url"
-            name="facebook_url"
-            value={formData.facebook_url}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://facebook.com/restaurant"
-          />
-        </div>
+        <LockedField locked={!hasSocialAccess} requiredTier="Featured">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Facebook URL {!hasSocialAccess && <Lock className="inline h-3 w-3 ml-1" />}
+            </label>
+            <input
+              type="url"
+              name="facebook_url"
+              value={formData.facebook_url}
+              onChange={handleChange}
+              disabled={!hasSocialAccess}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              placeholder="https://facebook.com/restaurant"
+            />
+          </div>
+        </LockedField>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Instagram URL
-          </label>
-          <input
-            type="url"
-            name="instagram_url"
-            value={formData.instagram_url}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://instagram.com/restaurant"
-          />
-        </div>
+        <LockedField locked={!hasSocialAccess} requiredTier="Featured">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Instagram URL {!hasSocialAccess && <Lock className="inline h-3 w-3 ml-1" />}
+            </label>
+            <input
+              type="url"
+              name="instagram_url"
+              value={formData.instagram_url}
+              onChange={handleChange}
+              disabled={!hasSocialAccess}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              placeholder="https://instagram.com/restaurant"
+            />
+          </div>
+        </LockedField>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Twitter URL
-          </label>
-          <input
-            type="url"
-            name="twitter_url"
-            value={formData.twitter_url}
-            onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-            placeholder="https://twitter.com/restaurant"
-          />
-        </div>
+        <LockedField locked={!hasSocialAccess} requiredTier="Featured">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Twitter URL {!hasSocialAccess && <Lock className="inline h-3 w-3 ml-1" />}
+            </label>
+            <input
+              type="url"
+              name="twitter_url"
+              value={formData.twitter_url}
+              onChange={handleChange}
+              disabled={!hasSocialAccess}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 disabled:bg-gray-100"
+              placeholder="https://twitter.com/restaurant"
+            />
+          </div>
+        </LockedField>
       </div>
 
       <div className="flex space-x-4">

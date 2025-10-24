@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { SubscriptionStatus } from '../components/subscription/SubscriptionStatus';
-import { SubscriptionPlans } from '../components/subscription/SubscriptionPlans';
+import SubscriptionStatus from '../components/SubscriptionStatus';
+import ListingTierComparison from '../components/ListingTierComparison';
 import { LogOut, User } from 'lucide-react';
 
 export function HomePage() {
@@ -70,7 +70,7 @@ export function HomePage() {
         )}
 
         {/* Subscription Plans */}
-        <SubscriptionPlans />
+        <ListingTierComparison />
       </main>
     </div>
   );

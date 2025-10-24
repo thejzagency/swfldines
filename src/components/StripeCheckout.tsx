@@ -15,12 +15,12 @@ const PLANS = {
     period: '/month',
     features: [
       'Everything in Free',
-      'Photo gallery (up to 5 images)',
+      '5 photo gallery images',
       'Full description section',
       'Website & social media links',
-      'Menu image upload',
-      'Featured listing badge',
-      'Boosted in search results'
+      'Menu URL link',
+      'Featured badge display',
+      'Priority in search results'
     ]
   },
   premium: {
@@ -29,12 +29,12 @@ const PLANS = {
     period: '/month',
     features: [
       'Everything in Featured',
-      'Photo gallery (up to 15 images)',
-      'Video showcase (1 video)',
-      'Priority placement in search',
-      'Homepage featured rotation',
-      'Monthly visitor analytics',
-      'Click & view tracking'
+      '15 photo gallery images',
+      'Features/amenities section',
+      'Visitor analytics dashboard',
+      'Click & engagement tracking',
+      '30-day performance history',
+      'Enhanced search visibility'
     ]
   },
   premium_plus: {
@@ -44,12 +44,12 @@ const PLANS = {
     features: [
       'Everything in Premium',
       'Unlimited photo gallery',
-      'Video showcase (up to 3 videos)',
-      'Top 3 search placement',
-      'Homepage hero rotation',
-      'Automatic blog feature',
-      'Advanced analytics dashboard',
-      '90-day performance history'
+      'Top search placement',
+      'Homepage featured spot',
+      'Advanced analytics',
+      '90-day performance history',
+      'Detailed click breakdown',
+      'Priority support'
     ]
   }
 };
