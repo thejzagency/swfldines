@@ -21,6 +21,29 @@ export function useAuth() {
       async (event, session) => {
         setUser(session?.user ?? null);
         setLoading(false);
+
+        // Handle email confirmation - create user profile after email is confirmed
+        if (event === 'SIGNED_IN' && session?.user) {
+          const { data: existingProfile } = await supabase
+            .from('user_profiles')
+            .select('id')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          // Only create profile if it doesn't exist
+          if (!existingProfile) {
+            const firstName = session.user.user_metadata?.first_name || '';
+            const lastName = session.user.user_metadata?.last_name || '';
+
+            await supabase.from('user_profiles').upsert({
+              id: session.user.id,
+              email: session.user.email,
+              first_name: firstName,
+              last_name: lastName,
+              role: 'user'
+            });
+          }
+        }
       }
     );
 

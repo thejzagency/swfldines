@@ -40,34 +40,55 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onSwitchMo
         if (error) throw error;
 
         if (data.user) {
-          // Update user profile with additional info
-          const { error: profileError } = await supabase
-            .from('user_profiles')
-            .upsert({
-              id: data.user.id,
-              email: data.user.email,
-              first_name: firstName,
-              last_name: lastName,
-              role: 'user'
+          // Check if email confirmation is required
+          const needsEmailConfirmation = !data.session;
+
+          if (needsEmailConfirmation) {
+            // User needs to confirm their email before logging in
+            setMessage({
+              type: 'success',
+              text: 'Account created! Please check your email and click the confirmation link to activate your account.'
             });
 
-          if (profileError) {
-            console.error('Profile update error:', profileError);
-          }
+            // Close modal after showing message
+            setTimeout(() => {
+              onClose();
+              setEmail('');
+              setPassword('');
+              setFirstName('');
+              setLastName('');
+            }, 4000);
+          } else {
+            // Email confirmation is disabled, user is automatically logged in
+            // Update user profile with additional info
+            const { error: profileError } = await supabase
+              .from('user_profiles')
+              .upsert({
+                id: data.user.id,
+                email: data.user.email,
+                first_name: firstName,
+                last_name: lastName,
+                role: 'user'
+              });
 
-          setMessage({
-            type: 'success',
-            text: 'Account created successfully! You can now claim restaurants and access all features.'
-          });
-          
-          // Close modal after success
-          setTimeout(() => {
-            onClose();
-            setEmail('');
-            setPassword('');
-            setFirstName('');
-            setLastName('');
-          }, 2000);
+            if (profileError) {
+              console.error('Profile update error:', profileError);
+            }
+
+            setMessage({
+              type: 'success',
+              text: 'Account created successfully! You can now claim restaurants and access all features.'
+            });
+
+            // Close modal after success
+            setTimeout(() => {
+              onClose();
+              setEmail('');
+              setPassword('');
+              setFirstName('');
+              setLastName('');
+            }, 2000);
+          }
         }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
