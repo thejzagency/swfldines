@@ -46,7 +46,7 @@ export async function generateSitemap(): Promise<string> {
     const { data: restaurants } = await supabase
       .from('restaurants')
       .select('id, updated_at')
-      .eq('status', 'approved');
+      .eq('status', 'active');
 
     if (restaurants) {
       restaurants.forEach((restaurant) => {

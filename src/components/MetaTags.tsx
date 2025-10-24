@@ -80,8 +80,10 @@ export function generateRestaurantStructuredData(restaurant: {
   website?: string;
   price_range: string;
   rating?: number;
+  hours?: Record<string, string>;
+  menu_url?: string;
 }) {
-  return {
+  const structuredData: any = {
     '@context': 'https://schema.org',
     '@type': 'Restaurant',
     name: restaurant.name,
@@ -97,16 +99,47 @@ export function generateRestaurantStructuredData(restaurant: {
       postalCode: restaurant.zip_code,
       addressCountry: 'US'
     },
-    telephone: restaurant.phone,
-    ...(restaurant.website && { url: restaurant.website }),
-    ...(restaurant.rating && {
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: restaurant.rating,
-        ratingCount: 1
-      }
-    })
+    telephone: restaurant.phone
   };
+
+  if (restaurant.website) {
+    structuredData.url = restaurant.website;
+  }
+
+  if (restaurant.rating) {
+    structuredData.aggregateRating = {
+      '@type': 'AggregateRating',
+      ratingValue: restaurant.rating,
+      ratingCount: 1
+    };
+  }
+
+  if (restaurant.menu_url) {
+    structuredData.hasMenu = restaurant.menu_url;
+  }
+
+  if (restaurant.hours && Object.keys(restaurant.hours).length > 0) {
+    const dayMapping: Record<string, string> = {
+      monday: 'Monday',
+      tuesday: 'Tuesday',
+      wednesday: 'Wednesday',
+      thursday: 'Thursday',
+      friday: 'Friday',
+      saturday: 'Saturday',
+      sunday: 'Sunday'
+    };
+
+    structuredData.openingHoursSpecification = Object.entries(restaurant.hours)
+      .filter(([_, hours]) => hours && hours !== 'Closed')
+      .map(([day, hours]) => ({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: dayMapping[day.toLowerCase()] || day,
+        opens: hours.split('-')[0]?.trim() || '',
+        closes: hours.split('-')[1]?.trim() || ''
+      }));
+  }
+
+  return structuredData;
 }
 
 export function generateBlogPostStructuredData(post: {
