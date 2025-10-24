@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node verify-config.cjs && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verify": "node verify-config.cjs"
   },
   "dependencies": {
     "@stripe/stripe-js": "^7.9.0",
