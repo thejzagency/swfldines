@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, MapPin, Phone, Globe, Clock, Star, Crown, ExternalLink, Building, CheckCircle, Facebook, Instagram, Twitter, Linkedin, Youtube, Mail } from 'lucide-react';
+import { X, MapPin, Phone, Globe, Clock, Crown, ExternalLink, Building, CheckCircle, Facebook, Instagram, Twitter, Linkedin, Youtube, Mail } from 'lucide-react';
 import { Restaurant } from '../types';
 import { trackRestaurantView, trackPhoneClick, trackWebsiteClick, trackDirectionsClick, trackMenuClick } from '../utils/analytics';
 import { MetaTags, generateRestaurantStructuredData } from './MetaTags';
@@ -120,24 +120,13 @@ const RestaurantModal: React.FC<RestaurantModalProps> = ({ restaurant, isOpen, o
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Info */}
             <div className="lg:col-span-2">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-4">
-                  <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                    {restaurant.cuisine_type}
-                  </span>
-                  <span className="text-2xl font-bold text-orange-600">
-                    {restaurant.price_range}
-                  </span>
-                </div>
-                {restaurant.rating && (
-                  <div className="flex items-center bg-gray-100 px-3 py-1 rounded-full">
-                    <Star className="h-5 w-5 mr-1 fill-current text-yellow-400" />
-                    <span className="font-semibold">{restaurant.rating.toFixed(1)}</span>
-                    {restaurant.review_count && (
-                      <span className="text-gray-600 ml-1">({restaurant.review_count} reviews)</span>
-                    )}
-                  </div>
-                )}
+              <div className="flex items-center space-x-4 mb-4">
+                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                  {restaurant.cuisine_type}
+                </span>
+                <span className="text-2xl font-bold text-orange-600">
+                  {restaurant.price_range}
+                </span>
               </div>
 
               <p className="text-gray-700 mb-6 text-lg leading-relaxed">{restaurant.description}</p>

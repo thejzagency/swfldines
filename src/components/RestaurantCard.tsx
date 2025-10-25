@@ -68,12 +68,6 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
             Claimed
           </div>
         )}
-        {restaurant.rating && (
-          <div className="absolute bottom-3 right-3 bg-black bg-opacity-70 text-white px-2 py-1 rounded-full text-sm flex items-center">
-            <Star className="h-4 w-4 mr-1 fill-current text-yellow-400" />
-            {restaurant.rating.toFixed(1)}
-          </div>
-        )}
       </div>
 
       {/* Content */}
@@ -91,16 +85,9 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
 
         <div className="space-y-2 text-sm text-gray-600">
           <div className="flex items-center">
-            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium mr-2">
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-xs font-medium">
               {restaurant.cuisine_type}
             </span>
-            {restaurant.rating && (
-              <div className="flex items-center text-yellow-600">
-                <Star className="h-4 w-4 mr-1 fill-current" />
-                <span className="font-medium">{restaurant.rating.toFixed(1)}</span>
-                <span className="text-gray-500 ml-1">({restaurant.review_count})</span>
-              </div>
-            )}
           </div>
 
           <div className="flex items-center">
