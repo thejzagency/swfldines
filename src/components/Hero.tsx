@@ -89,7 +89,7 @@ const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
               className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-lg font-semibold text-lg transition-colors flex items-center justify-center"
             >
               <Utensils className="h-5 w-5 mr-2" />
-              List Your Restaurant
+              Add Your Restaurant
             </button>
           </div>
 

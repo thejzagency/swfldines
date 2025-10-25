@@ -47,7 +47,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onSwitchMo
             // User needs to confirm their email before logging in
             setMessage({
               type: 'success',
-              text: 'Account created! Please check your email and click the confirmation link to activate your account.'
+              text: 'Restaurant owner account created! Please check your email and click the confirmation link to activate your account.'
             });
 
             // Close modal after showing message
@@ -77,7 +77,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onSwitchMo
 
             setMessage({
               type: 'success',
-              text: 'Account created successfully! You can now claim restaurants and access all features.'
+              text: 'Restaurant owner account created! You can now claim and manage your restaurant listings.'
             });
 
             // Close modal after success
@@ -126,7 +126,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onSwitchMo
       <div className="bg-white rounded-xl max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
-            {mode === 'login' ? 'Welcome Back' : 'Create Account'}
+            {mode === 'login' ? 'Restaurant Owner Login' : 'Restaurant Owner Signup'}
           </h2>
           <button
             onClick={onClose}
@@ -247,13 +247,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, mode, onSwitchMo
               onClick={onSwitchMode}
               className="ml-1 text-blue-600 hover:text-blue-800 font-medium"
             >
-              {mode === 'login' ? 'Sign up' : 'Sign in'}
+              {mode === 'login' ? 'Create restaurant owner account' : 'Sign in'}
             </button>
           </p>
         </div>
 
         {mode === 'signup' && (
           <div className="mt-4 text-center">
+            <p className="text-xs text-gray-500 mb-2">
+              <strong>Restaurant owners only.</strong> Create an account to claim and manage your restaurant listing.
+            </p>
             <p className="text-xs text-gray-500">
               By creating an account, you agree to our{' '}
               <button className="text-blue-600 hover:underline">Terms of Service</button>
