@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, MapPin, Star, Utensils, Crown } from 'lucide-react';
+import { Search, MapPin, Users, Filter, Utensils, Crown } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Restaurant } from '../types';
 
@@ -121,21 +121,21 @@ const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
 
             <div className="text-center">
               <div className="bg-green-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Star className="h-8 w-8 text-green-600" />
+                <Users className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Quality First</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Free to Browse</h3>
               <p className="text-gray-600">
-                Every restaurant is carefully selected to ensure exceptional dining experiences
+                No fees, no accounts needed - just discover great dining
               </p>
             </div>
 
             <div className="text-center">
               <div className="bg-orange-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                <Utensils className="h-8 w-8 text-orange-600" />
+                <Filter className="h-8 w-8 text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Always Fresh</h3>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">Easy Discovery</h3>
               <p className="text-gray-600">
-                Updated daily with the latest restaurant information and seasonal menus
+                Search by cuisine, location, price range, and features
               </p>
             </div>
           </div>
