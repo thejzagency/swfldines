@@ -438,12 +438,26 @@ function App() {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => setIsAuthModalOpen(true)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium"
-                >
-                  Restaurant Owner Login
-                </button>
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => {
+                      setAuthMode('login');
+                      setIsAuthModalOpen(true);
+                    }}
+                    className="text-blue-600 hover:text-blue-800 px-4 py-2 rounded-lg font-medium border border-blue-600 hover:border-blue-800 transition-colors"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      setAuthMode('signup');
+                      setIsAuthModalOpen(true);
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                  >
+                    Sign Up
+                  </button>
+                </div>
               )}
             </div>
           </div>
