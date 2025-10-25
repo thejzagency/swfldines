@@ -72,10 +72,6 @@ const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
               <div className="text-3xl font-bold text-white">10+</div>
               <div className="text-blue-200">Cities</div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white">4.5★</div>
-              <div className="text-blue-200">Average Rating</div>
-            </div>
           </div>
 
           {/* CTA Buttons */}
