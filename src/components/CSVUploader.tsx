@@ -21,9 +21,10 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
   const [previewData, setPreviewData] = useState<any[]>([]);
 
   const downloadTemplate = () => {
-    const template = `name,cuisine_type,phone,email,address,city,state,zip_code
-"Sample Restaurant","Italian","(239) 555-1234","contact@samplerestaurant.com","123 Main Street","Fort Myers","FL","33901"
-"Another Example","Mexican","(239) 555-5678","info@anotherexample.com","456 Beach Blvd","Naples","FL","34102"`;
+    const template = `name,cuisine_type,phone,email,address,city,state,zip_code,google_place_id
+"Sample Restaurant","Italian","(239) 555-1234","contact@samplerestaurant.com","123 Main Street","Fort Myers","FL","33901","ChIJN1t_tDeuEmsRUsoyG83frY4"
+"Another Example","Mexican","(239) 555-5678","info@anotherexample.com","456 Beach Blvd","Naples","FL","34102",""`;
+
 
     const blob = new Blob([template], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -112,6 +113,7 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             city: row.city || '',
             state: row.state || 'FL',
             zip_code: row.zip_code || '',
+            google_place_id: row.google_place_id || null,
             description: '',
             price_range: '$',
             website: '',
