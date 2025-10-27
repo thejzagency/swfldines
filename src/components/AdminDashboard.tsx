@@ -19,7 +19,8 @@ import {
   Download,
   RefreshCw,
   Upload,
-  FileText
+  FileText,
+  Home
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -670,6 +671,13 @@ export default function AdminDashboard({ user, onLogout }: AdminDashboardProps) 
             <p className="text-sm text-gray-600 mt-1">Logged in as {user.email}</p>
           </div>
           <div className="flex space-x-3">
+            <a
+              href="/"
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center"
+            >
+              <Home className="h-4 w-4 mr-2" />
+              Back to Directory
+            </a>
             <button
               onClick={fetchAllData}
               className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg flex items-center"
