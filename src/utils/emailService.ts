@@ -31,23 +31,7 @@ export class EmailService {
   static async sendEmail(options: EmailOptions): Promise<boolean> {
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      const token = session?.access_token;
-
-      if (!token) {
-        console.error('No authentication token available');
-        await this.logEmail({
-          recipient_email: options.to,
-          recipient_name: options.toName || '',
-          subject: options.subject,
-          template_id: options.templateId,
-          restaurant_id: options.restaurantId,
-          user_id: options.userId,
-          status: 'failed',
-          error_message: 'No authentication token',
-          metadata: options.metadata
-        });
-        return false;
-      }
+      const token = session?.access_token || env.supabaseAnonKey;
 
       const response = await fetch(
         `${env.supabaseUrl}/functions/v1/send-email`,
