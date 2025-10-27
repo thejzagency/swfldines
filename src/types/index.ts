@@ -27,6 +27,7 @@ export interface Restaurant {
   twitter_url?: string;
   linkedin_url?: string;
   youtube_url?: string;
+  google_place_id?: string;
   created_at: string;
   updated_at: string;
   status: 'active' | 'pending' | 'inactive';
@@ -49,6 +50,30 @@ export interface User {
   first_name: string;
   last_name: string;
   phone?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GoogleReview {
+  id: string;
+  restaurant_id: string;
+  google_place_id: string;
+  author_name: string;
+  author_photo_url?: string;
+  rating: number;
+  text?: string;
+  time: number;
+  relative_time_description: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface RestaurantGoogleData {
+  restaurant_id: string;
+  google_place_id: string;
+  rating: number;
+  user_ratings_total: number;
+  last_fetched_at: string;
   created_at: string;
   updated_at: string;
 }

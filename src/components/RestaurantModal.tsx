@@ -3,6 +3,8 @@ import { X, MapPin, Phone, Globe, Clock, Crown, ExternalLink, Building, CheckCir
 import { Restaurant } from '../types';
 import { trackRestaurantView, trackPhoneClick, trackWebsiteClick, trackDirectionsClick, trackMenuClick } from '../utils/analytics';
 import { MetaTags, generateRestaurantStructuredData } from './MetaTags';
+import { useGoogleReviews } from '../hooks/useGoogleReviews';
+import GoogleReviews from './GoogleReviews';
 
 interface RestaurantModalProps {
   restaurant: Restaurant | null;
@@ -13,6 +15,11 @@ interface RestaurantModalProps {
 }
 
 const RestaurantModal: React.FC<RestaurantModalProps> = ({ restaurant, isOpen, onClose, onClaimRestaurant, user }) => {
+  const { reviews, googleData, loading: reviewsLoading } = useGoogleReviews(
+    restaurant?.id || '',
+    restaurant?.google_place_id
+  );
+
   // Track page view when modal opens
   React.useEffect(() => {
     if (isOpen && restaurant) {
@@ -145,6 +152,17 @@ const RestaurantModal: React.FC<RestaurantModalProps> = ({ restaurant, isOpen, o
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Google Reviews */}
+              {restaurant.google_place_id && (
+                <div className="mb-6 border-t border-gray-200 pt-6">
+                  <GoogleReviews
+                    reviews={reviews}
+                    googleData={googleData}
+                    loading={reviewsLoading}
+                  />
                 </div>
               )}
             </div>

@@ -10,6 +10,7 @@ interface HeroProps {
 const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
   const [featuredRestaurants, setFeaturedRestaurants] = useState<Restaurant[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchFeaturedRestaurants = async () => {
@@ -25,7 +26,19 @@ const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
       }
     };
 
+    const fetchAverageRating = async () => {
+      const { data } = await supabase
+        .from('restaurant_google_data')
+        .select('rating');
+
+      if (data && data.length > 0) {
+        const avg = data.reduce((sum, item) => sum + (item.rating || 0), 0) / data.length;
+        setAverageRating(avg);
+      }
+    };
+
     fetchFeaturedRestaurants();
+    fetchAverageRating();
   }, []);
 
   useEffect(() => {
@@ -72,6 +85,12 @@ const Hero: React.FC<HeroProps> = ({ onListRestaurant }) => {
               <div className="text-3xl font-bold text-white">10+</div>
               <div className="text-blue-200">Cities</div>
             </div>
+            {averageRating && (
+              <div className="text-center">
+                <div className="text-3xl font-bold text-white">{averageRating.toFixed(1)}★</div>
+                <div className="text-blue-200">Avg Google Rating</div>
+              </div>
+            )}
           </div>
 
           {/* CTA Buttons */}

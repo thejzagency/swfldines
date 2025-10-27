@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MapPin, Phone, Clock, Star, ExternalLink, Crown } from 'lucide-react';
 import { Restaurant } from '../types';
+import { supabase } from '../lib/supabase';
 
 interface RestaurantCardProps {
   restaurant: Restaurant;
@@ -8,6 +9,28 @@ interface RestaurantCardProps {
 }
 
 const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) => {
+  const [googleRating, setGoogleRating] = useState<number | null>(null);
+  const [ratingsCount, setRatingsCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchGoogleRating = async () => {
+      if (!restaurant.google_place_id) return;
+
+      const { data } = await supabase
+        .from('restaurant_google_data')
+        .select('rating, user_ratings_total')
+        .eq('restaurant_id', restaurant.id)
+        .maybeSingle();
+
+      if (data) {
+        setGoogleRating(data.rating);
+        setRatingsCount(data.user_ratings_total);
+      }
+    };
+
+    fetchGoogleRating();
+  }, [restaurant.id, restaurant.google_place_id]);
+
   const getPriceRangeColor = (priceRange: string) => {
     switch (priceRange) {
       case '$': return 'text-green-600 bg-green-50';
@@ -80,6 +103,14 @@ const RestaurantCard: React.FC<RestaurantCardProps> = ({ restaurant, onClick }) 
             {restaurant.price_range}
           </span>
         </div>
+
+        {googleRating && (
+          <div className="flex items-center gap-1 mb-2">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="text-sm font-semibold text-gray-900">{googleRating.toFixed(1)}</span>
+            <span className="text-xs text-gray-600">({ratingsCount})</span>
+          </div>
+        )}
 
         <p className="text-gray-600 mb-3 line-clamp-2">{restaurant.description}</p>
 
