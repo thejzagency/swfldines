@@ -104,7 +104,7 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
 
       for (const row of rows) {
         try {
-          const restaurantData = {
+          const restaurantData: any = {
             name: row.name,
             cuisine_type: row.cuisine_type || '',
             phone: row.phone || '',
@@ -113,7 +113,6 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             city: row.city || '',
             state: row.state || 'FL',
             zip_code: row.zip_code || '',
-            google_place_id: row.google_place_id || null,
             description: '',
             price_range: '$',
             website: '',
@@ -132,6 +131,10 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             owner_claimed: false,
             status: 'active'
           };
+
+          if (row.google_place_id && row.google_place_id.trim()) {
+            restaurantData.google_place_id = row.google_place_id.trim();
+          }
 
           const { data: inserted, error } = await supabase
             .from('restaurants')
