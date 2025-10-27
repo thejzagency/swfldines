@@ -65,7 +65,68 @@ Deno.serve(async (req: Request) => {
         let subject = "";
         let html = "";
 
-        if (sequence.sequence_type === "upsell") {
+        if (sequence.sequence_type === "claim_reminder") {
+          const claimLink = `${supabaseUrl.replace("/v1", "")}?restaurant=${sequence.restaurant_id}`;
+
+          if (sequence.current_step === 0) {
+            templateName = "claim_reminder_1";
+            subject = `Reminder: Claim Your Restaurant on SW Florida Dines`;
+            html = `
+              <h2>Hi ${restaurant.name}!</h2>
+              <p>We noticed you haven't claimed your restaurant listing yet.</p>
+              <p>By claiming your listing, you can:</p>
+              <ul>
+                <li>✓ Update your information</li>
+                <li>✓ Respond to customers</li>
+                <li>✓ Add photos and menus</li>
+                <li>✓ Manage your online presence</li>
+              </ul>
+              <p><a href="${claimLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Claim Your Restaurant</a></p>
+              <p>Best regards,<br>SW Florida Dines Team</p>
+            `;
+          } else if (sequence.current_step === 1) {
+            templateName = "claim_reminder_2";
+            subject = `Don't Miss Out - Claim ${restaurant.name} Today`;
+            html = `
+              <h2>Hi ${restaurant.name}!</h2>
+              <p>Your restaurant listing is still unclaimed. Don't let potential customers miss out on accurate information!</p>
+              <p>Claiming takes less than 2 minutes and gives you full control over your listing.</p>
+              <p><a href="${claimLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Claim Your Restaurant Now</a></p>
+              <p>Best regards,<br>SW Florida Dines Team</p>
+            `;
+          } else {
+            templateName = "claim_reminder_final";
+            subject = `Last Chance - Claim Your Restaurant Listing`;
+            html = `
+              <h2>Hi ${restaurant.name}!</h2>
+              <p>This is our final reminder about your unclaimed restaurant listing.</p>
+              <p>After this, we won't send any more reminders, but your restaurant will remain visible to customers with the current information.</p>
+              <p>To ensure your listing is accurate and up-to-date, claim it now:</p>
+              <p><a href="${claimLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Claim Your Restaurant</a></p>
+              <p>Best regards,<br>SW Florida Dines Team</p>
+            `;
+          }
+
+          const emailResponse = await fetch(
+            `${supabaseUrl}/functions/v1/send-email`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${supabaseServiceKey}`,
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                to: restaurant.email,
+                toName: restaurant.name,
+                subject: subject,
+                html: html,
+              }),
+            }
+          );
+
+          const emailResult = await emailResponse.json();
+          emailSent = emailResponse.ok && emailResult.success;
+        } else if (sequence.sequence_type === "upsell") {
           const tier = sequence.current_step === 0 ? "featured" : "premium";
           templateName = tier === "featured" ? "upsell_featured" : "upsell_premium";
 
@@ -140,7 +201,8 @@ Deno.serve(async (req: Request) => {
               .eq("id", sequence.id);
           } else {
             const nextEmailDate = new Date();
-            nextEmailDate.setDate(nextEmailDate.getDate() + 7);
+            const daysToAdd = sequence.sequence_type === "claim_reminder" ? 3 : 7;
+            nextEmailDate.setDate(nextEmailDate.getDate() + daysToAdd);
 
             await supabase
               .from("email_sequences")

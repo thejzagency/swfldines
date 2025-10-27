@@ -295,13 +295,17 @@ export class EmailService {
         restaurant.city
       );
 
+      const nextEmailDate = new Date();
+      nextEmailDate.setDate(nextEmailDate.getDate() + 3);
+
       await supabase.from('email_sequences').insert([{
         restaurant_id: restaurantId,
-        sequence_type: 'verification',
-        current_step: 1,
-        total_steps: 1,
-        status: 'completed',
-        last_email_sent_at: new Date().toISOString()
+        sequence_type: 'claim_reminder',
+        current_step: 0,
+        total_steps: 3,
+        status: 'active',
+        last_email_sent_at: new Date().toISOString(),
+        next_email_scheduled_at: nextEmailDate.toISOString()
       }]);
     } catch (error) {
       console.error('Error starting verification sequence:', error);

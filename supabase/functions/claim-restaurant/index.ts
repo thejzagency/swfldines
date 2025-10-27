@@ -85,6 +85,27 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    await supabase
+      .from('email_sequences')
+      .update({ status: 'cancelled' })
+      .eq('restaurant_id', restaurantId)
+      .eq('sequence_type', 'claim_reminder')
+      .eq('status', 'active');
+
+    const nextEmailDate = new Date();
+    nextEmailDate.setDate(nextEmailDate.getDate() + 7);
+
+    await supabase
+      .from('email_sequences')
+      .insert([{
+        restaurant_id: restaurantId,
+        sequence_type: 'upsell',
+        current_step: 0,
+        total_steps: 2,
+        status: 'active',
+        next_email_scheduled_at: nextEmailDate.toISOString()
+      }]);
+
     return new Response(
       JSON.stringify({ data: updatedRestaurant }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
