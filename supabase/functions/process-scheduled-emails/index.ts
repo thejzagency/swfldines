@@ -201,7 +201,13 @@ Deno.serve(async (req: Request) => {
               .eq("id", sequence.id);
           } else {
             const nextEmailDate = new Date();
-            const daysToAdd = sequence.sequence_type === "claim_reminder" ? 3 : 7;
+            let daysToAdd = 7;
+
+            if (sequence.sequence_type === "claim_reminder") {
+              // Step 0->1: 3 days, Step 1->2: 7 days
+              daysToAdd = nextStep === 1 ? 3 : 7;
+            }
+
             nextEmailDate.setDate(nextEmailDate.getDate() + daysToAdd);
 
             await supabase
