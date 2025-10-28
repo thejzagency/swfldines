@@ -261,28 +261,36 @@ export class EmailService {
 
   static async startVerificationSequence(restaurantId: string): Promise<void> {
     try {
+      console.log('[EmailService] Starting verification sequence for:', restaurantId);
+
       const { data: restaurant } = await supabase
         .from('restaurants')
         .select('name, email, city')
         .eq('id', restaurantId)
         .maybeSingle();
 
+      console.log('[EmailService] Restaurant data:', restaurant);
+
       if (!restaurant || !restaurant.email) {
-        console.warn('Restaurant not found or no email:', restaurantId);
+        console.warn('[EmailService] Restaurant not found or no email:', restaurantId);
         return;
       }
 
-      await this.sendRestaurantVerification(
+      console.log('[EmailService] Sending verification email to:', restaurant.email);
+
+      const emailSent = await this.sendRestaurantVerification(
         restaurantId,
         restaurant.name,
         restaurant.email,
         restaurant.city
       );
 
+      console.log('[EmailService] Email sent result:', emailSent);
+
       const nextEmailDate = new Date();
       nextEmailDate.setDate(nextEmailDate.getDate() + 3);
 
-      await supabase.from('email_sequences').insert([{
+      const { error: sequenceError } = await supabase.from('email_sequences').insert([{
         restaurant_id: restaurantId,
         sequence_type: 'claim_reminder',
         current_step: 0,
@@ -291,8 +299,15 @@ export class EmailService {
         last_email_sent_at: new Date().toISOString(),
         next_email_scheduled_at: nextEmailDate.toISOString()
       }]);
+
+      if (sequenceError) {
+        console.error('[EmailService] Error creating email sequence:', sequenceError);
+      } else {
+        console.log('[EmailService] Email sequence created successfully');
+      }
     } catch (error) {
-      console.error('Error starting verification sequence:', error);
+      console.error('[EmailService] Error starting verification sequence:', error);
+      throw error;
     }
   }
 
