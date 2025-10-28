@@ -6,6 +6,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Client-Info, Apikey",
 };
 
+const BATCH_SIZE = 50;
+const DELAY_BETWEEN_EMAILS_MS = 100;
+
+async function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -23,7 +30,8 @@ Deno.serve(async (req: Request) => {
       .from("email_sequences")
       .select("*, restaurants(id, name, email)")
       .eq("status", "active")
-      .lte("next_email_scheduled_at", new Date().toISOString());
+      .lte("next_email_scheduled_at", new Date().toISOString())
+      .limit(BATCH_SIZE);
 
     if (fetchError) {
       throw fetchError;
@@ -242,7 +250,15 @@ Deno.serve(async (req: Request) => {
           error: error.message,
         });
       }
+
+      await sleep(DELAY_BETWEEN_EMAILS_MS);
     }
+
+    const { count: remainingCount } = await supabase
+      .from("email_sequences")
+      .select("*", { count: "exact", head: true })
+      .eq("status", "active")
+      .lte("next_email_scheduled_at", new Date().toISOString());
 
     return new Response(
       JSON.stringify({
@@ -250,6 +266,11 @@ Deno.serve(async (req: Request) => {
         message: `Processed ${processedCount} scheduled emails`,
         processed: processedCount,
         total: sequences.length,
+        remaining: remainingCount || 0,
+        batchSize: BATCH_SIZE,
+        note: remainingCount && remainingCount > 0
+          ? `${remainingCount} more emails queued for next hourly run`
+          : "All scheduled emails processed",
         results: results,
       }),
       {
