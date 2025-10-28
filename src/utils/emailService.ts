@@ -98,6 +98,38 @@ export class EmailService {
     }
   }
 
+  private static getHardcodedTemplate(templateName: string): { subject: string; html: string; text: string } | null {
+    const templates: Record<string, { subject: string; html: string; text: string }> = {
+      'restaurant_verification': {
+        subject: 'Claim Your Restaurant Listing on SW Florida Dines',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #2c3e50;">Welcome to SW Florida Dines!</h2>
+            <p>Hi there,</p>
+            <p>We've added <strong>{{restaurant_name}}</strong> in {{city}} to our restaurant directory!</p>
+            <p>You can claim your listing and get access to premium features:</p>
+            <ul>
+              <li>Update your restaurant information</li>
+              <li>Add photos and menu items</li>
+              <li>Respond to reviews</li>
+              <li>Track analytics</li>
+            </ul>
+            <p style="margin: 30px 0;">
+              <a href="{{verification_link}}" style="background-color: #3498db; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;">
+                Claim Your Listing
+              </a>
+            </p>
+            <p>If you have any questions, feel free to reply to this email.</p>
+            <p>Best regards,<br>SW Florida Dines Team</p>
+          </div>
+        `,
+        text: `Welcome to SW Florida Dines!\n\nWe've added {{restaurant_name}} in {{city}} to our restaurant directory!\n\nClaim your listing here: {{verification_link}}\n\nBest regards,\nSW Florida Dines Team`
+      }
+    };
+
+    return templates[templateName] || null;
+  }
+
   static async sendFromTemplate(
     templateName: string,
     to: string,
@@ -110,20 +142,17 @@ export class EmailService {
     }
   ): Promise<boolean> {
     try {
-      const { data: template, error } = await supabase
-        .from('email_templates')
-        .select('*')
-        .eq('name', templateName)
-        .eq('is_active', true)
-        .maybeSingle();
+      console.log('[EmailService] Getting template:', templateName);
 
-      if (error || !template) {
-        console.error('Template not found:', templateName);
+      const template = this.getHardcodedTemplate(templateName);
+
+      if (!template) {
+        console.error('[EmailService] Template not found:', templateName);
         return false;
       }
 
-      let html = template.html_content;
-      let text = template.text_content || '';
+      let html = template.html;
+      let text = template.text;
       let subject = template.subject;
 
       Object.entries(variables).forEach(([key, value]) => {
@@ -133,19 +162,21 @@ export class EmailService {
         subject = subject.replace(new RegExp(placeholder, 'g'), value);
       });
 
+      console.log('[EmailService] Sending email with subject:', subject);
+
       return await this.sendEmail({
         to,
         toName: options?.toName,
         subject,
         html,
         text,
-        templateId: template.id,
+        templateId: templateName,
         restaurantId: options?.restaurantId,
         userId: options?.userId,
         metadata: options?.metadata
       });
     } catch (error) {
-      console.error('Error sending template email:', error);
+      console.error('[EmailService] Error sending template email:', error);
       return false;
     }
   }
@@ -287,27 +318,8 @@ export class EmailService {
 
       console.log('[EmailService] Email sent result:', emailSent);
 
-      const nextEmailDate = new Date();
-      nextEmailDate.setDate(nextEmailDate.getDate() + 3);
-
-      const { error: sequenceError } = await supabase.from('email_sequences').insert([{
-        restaurant_id: restaurantId,
-        sequence_type: 'claim_reminder',
-        current_step: 0,
-        total_steps: 3,
-        status: 'active',
-        last_email_sent_at: new Date().toISOString(),
-        next_email_scheduled_at: nextEmailDate.toISOString()
-      }]);
-
-      if (sequenceError) {
-        console.error('[EmailService] Error creating email sequence:', sequenceError);
-      } else {
-        console.log('[EmailService] Email sequence created successfully');
-      }
     } catch (error) {
       console.error('[EmailService] Error starting verification sequence:', error);
-      throw error;
     }
   }
 
