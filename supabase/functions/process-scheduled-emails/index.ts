@@ -204,7 +204,6 @@ Deno.serve(async (req: Request) => {
             let daysToAdd = 7;
 
             if (sequence.sequence_type === "claim_reminder") {
-              // Step 0->1: 3 days, Step 1->2: 7 days
               daysToAdd = nextStep === 1 ? 3 : 7;
             }
 
