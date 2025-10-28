@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Upload, Download, AlertCircle, CheckCircle, X } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { EmailService } from '../utils/emailService';
 
 interface CSVUploaderProps {
   onUploadComplete: () => void;
@@ -147,10 +146,6 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             errors.push(`Failed to upload "${row.name}": ${error.message}`);
           } else {
             success++;
-
-            if (inserted && inserted.email) {
-              await EmailService.startVerificationSequence(inserted.id);
-            }
           }
         } catch (error: any) {
           failed++;
