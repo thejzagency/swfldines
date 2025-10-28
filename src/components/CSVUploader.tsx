@@ -148,10 +148,9 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
           } else {
             success++;
 
-            // Email sending temporarily disabled due to Supabase PostgREST cache issue
-            // if (inserted && inserted.email) {
-            //   await EmailService.startVerificationSequence(inserted.id);
-            // }
+            if (inserted && inserted.email) {
+              await EmailService.startVerificationSequence(inserted.id);
+            }
           }
         } catch (error: any) {
           failed++;
