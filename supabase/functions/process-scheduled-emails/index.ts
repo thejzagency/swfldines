@@ -26,6 +26,8 @@ Deno.serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+    console.log('Fetching scheduled emails...');
+
     const { data: sequences, error: fetchError } = await supabase
       .from("email_sequences")
       .select("*, restaurants(id, name, email)")
@@ -36,6 +38,8 @@ Deno.serve(async (req: Request) => {
     if (fetchError) {
       throw fetchError;
     }
+
+    console.log(`Found ${sequences?.length || 0} scheduled emails`);
 
     if (!sequences || sequences.length === 0) {
       return new Response(
@@ -115,6 +119,8 @@ Deno.serve(async (req: Request) => {
             `;
           }
 
+          console.log(`Sending ${templateName} to ${restaurant.name} (${restaurant.email})`);
+
           const emailResponse = await fetch(
             `${supabaseUrl}/functions/v1/send-email`,
             {
@@ -134,6 +140,15 @@ Deno.serve(async (req: Request) => {
 
           const emailResult = await emailResponse.json();
           emailSent = emailResponse.ok && emailResult.success;
+
+          if (!emailSent) {
+            console.error('Email send failed:', {
+              status: emailResponse.status,
+              statusText: emailResponse.statusText,
+              result: emailResult,
+              restaurant: restaurant.name
+            });
+          }
         } else if (sequence.sequence_type === "upsell") {
           const tier = sequence.current_step === 0 ? "featured" : "premium";
           templateName = tier === "featured" ? "upsell_featured" : "upsell_premium";
@@ -173,6 +188,8 @@ Deno.serve(async (req: Request) => {
             `;
           }
 
+          console.log(`Sending ${templateName} to ${restaurant.name} (${restaurant.email})`);
+
           const emailResponse = await fetch(
             `${supabaseUrl}/functions/v1/send-email`,
             {
@@ -192,6 +209,15 @@ Deno.serve(async (req: Request) => {
 
           const emailResult = await emailResponse.json();
           emailSent = emailResponse.ok && emailResult.success;
+
+          if (!emailSent) {
+            console.error('Email send failed:', {
+              status: emailResponse.status,
+              statusText: emailResponse.statusText,
+              result: emailResult,
+              restaurant: restaurant.name
+            });
+          }
         }
 
         if (emailSent) {
@@ -243,6 +269,7 @@ Deno.serve(async (req: Request) => {
           });
         }
       } catch (error: any) {
+        console.error('Error processing sequence:', error);
         results.push({
           sequenceId: sequence.id,
           restaurantName: restaurant.name,
