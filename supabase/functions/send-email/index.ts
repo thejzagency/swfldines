@@ -26,10 +26,12 @@ Deno.serve(async (req: Request) => {
     const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY');
 
     if (!sendgridApiKey) {
+      console.error('SendGrid API key not configured');
       throw new Error('SendGrid API key not configured');
     }
 
     const emailData: EmailRequest = await req.json();
+    console.log('Sending email to:', emailData.to);
 
     const emailPayload = {
       personalizations: [
@@ -57,6 +59,7 @@ Deno.serve(async (req: Request) => {
       });
     }
 
+    console.log('Calling SendGrid API...');
     const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
       method: 'POST',
       headers: {
@@ -68,10 +71,11 @@ Deno.serve(async (req: Request) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('SendGrid API error:', errorText);
+      console.error('SendGrid API error:', response.status, errorText);
       throw new Error(`SendGrid error (${response.status}): ${errorText}`);
     }
 
+    console.log('Email sent successfully');
     return new Response(
       JSON.stringify({ success: true, message: 'Email sent successfully' }),
       {
