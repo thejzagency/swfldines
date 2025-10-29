@@ -67,8 +67,9 @@ Deno.serve(async (req: Request) => {
     });
 
     if (!response.ok) {
-      const error = await response.text();
-      throw new Error(`SendGrid error: ${error}`);
+      const errorText = await response.text();
+      console.error('SendGrid API error:', errorText);
+      throw new Error(`SendGrid error (${response.status}): ${errorText}`);
     }
 
     return new Response(
