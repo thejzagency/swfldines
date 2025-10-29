@@ -13,6 +13,58 @@ async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function sendEmail(to: string, toName: string, subject: string, html: string): Promise<boolean> {
+  try {
+    const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY');
+
+    if (!sendgridApiKey) {
+      console.error('SendGrid API key not configured');
+      return false;
+    }
+
+    const emailPayload = {
+      personalizations: [
+        {
+          to: [{ email: to, name: toName }],
+          subject: subject,
+        },
+      ],
+      from: {
+        email: 'admin@swfldines.com',
+        name: 'SW Florida Dines',
+      },
+      content: [
+        {
+          type: 'text/html',
+          value: html,
+        },
+      ],
+    };
+
+    console.log(`Sending email to ${toName} (${to})...`);
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${sendgridApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(emailPayload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('SendGrid API error:', response.status, errorText);
+      return false;
+    }
+
+    console.log('Email sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Email send error:', error);
+    return false;
+  }
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -120,35 +172,7 @@ Deno.serve(async (req: Request) => {
           }
 
           console.log(`Sending ${templateName} to ${restaurant.name} (${restaurant.email})`);
-
-          const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/send-email`,
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${supabaseServiceKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                to: restaurant.email,
-                toName: restaurant.name,
-                subject: subject,
-                html: html,
-              }),
-            }
-          );
-
-          const emailResult = await emailResponse.json();
-          emailSent = emailResponse.ok && emailResult.success;
-
-          if (!emailSent) {
-            console.error('Email send failed:', {
-              status: emailResponse.status,
-              statusText: emailResponse.statusText,
-              result: emailResult,
-              restaurant: restaurant.name
-            });
-          }
+          emailSent = await sendEmail(restaurant.email, restaurant.name, subject, html);
         } else if (sequence.sequence_type === "upsell") {
           const tier = sequence.current_step === 0 ? "featured" : "premium";
           templateName = tier === "featured" ? "upsell_featured" : "upsell_premium";
@@ -189,35 +213,7 @@ Deno.serve(async (req: Request) => {
           }
 
           console.log(`Sending ${templateName} to ${restaurant.name} (${restaurant.email})`);
-
-          const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/send-email`,
-            {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${supabaseServiceKey}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                to: restaurant.email,
-                toName: restaurant.name,
-                subject: subject,
-                html: html,
-              }),
-            }
-          );
-
-          const emailResult = await emailResponse.json();
-          emailSent = emailResponse.ok && emailResult.success;
-
-          if (!emailSent) {
-            console.error('Email send failed:', {
-              status: emailResponse.status,
-              statusText: emailResponse.statusText,
-              result: emailResult,
-              restaurant: restaurant.name
-            });
-          }
+          emailSent = await sendEmail(restaurant.email, restaurant.name, subject, html);
         }
 
         if (emailSent) {
