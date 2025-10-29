@@ -156,6 +156,30 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
       setResult({ success, failed, errors });
       if (success > 0) {
         onUploadComplete();
+
+        // Add user to SendGrid CSV upload list
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user?.email) {
+            const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+            const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+            await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${supabaseAnonKey}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email: user.email,
+                listType: 'csv_upload'
+              })
+            });
+            console.log('User added to CSV upload email sequence');
+          }
+        } catch (emailError) {
+          console.error('Failed to add to email list:', emailError);
+        }
       }
     } catch (error: any) {
       alert(`Upload failed: ${error.message}`);

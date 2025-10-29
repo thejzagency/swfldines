@@ -221,6 +221,29 @@ function App() {
 
       await EmailService.startUpsellSequence(claimedRestaurant.id);
 
+      // Add user to SendGrid restaurant claim list
+      try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+        await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${supabaseAnonKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email,
+            firstName: userProfile?.first_name || '',
+            lastName: userProfile?.last_name || '',
+            listType: 'restaurant_claim'
+          })
+        });
+        console.log('User added to restaurant claim email sequence');
+      } catch (emailError) {
+        console.error('Failed to add to email list:', emailError);
+      }
+
       alert('Restaurant claim submitted successfully! Your claim is pending admin approval. You will be notified once approved.');
       setIsRestaurantModalOpen(false);
       refetch();
