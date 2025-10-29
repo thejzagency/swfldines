@@ -116,7 +116,7 @@ Deno.serve(async (req: Request) => {
           }
 
           const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/send-email`,
+            `${supabaseUrl}/functions/v1/smooth-task`,
             {
               method: "POST",
               headers: {
@@ -174,7 +174,7 @@ Deno.serve(async (req: Request) => {
           }
 
           const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/send-email`,
+            `${supabaseUrl}/functions/v1/smooth-task`,
             {
               method: "POST",
               headers: {
