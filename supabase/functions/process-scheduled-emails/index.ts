@@ -84,10 +84,10 @@ Deno.serve(async (req: Request) => {
               <p>We noticed you haven't claimed your restaurant listing yet.</p>
               <p>By claiming your listing, you can:</p>
               <ul>
-                <li>✓ Update your information</li>
-                <li>✓ Respond to customers</li>
-                <li>✓ Add photos and menus</li>
-                <li>✓ Manage your online presence</li>
+                <li>&#10003; Update your information</li>
+                <li>&#10003; Respond to customers</li>
+                <li>&#10003; Add photos and menus</li>
+                <li>&#10003; Manage your online presence</li>
               </ul>
               <p><a href="${claimLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Claim Your Restaurant</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
@@ -147,10 +147,10 @@ Deno.serve(async (req: Request) => {
               <p>We've noticed you claimed your restaurant listing - that's great!</p>
               <p>Want to stand out even more? Upgrade to a <strong>Featured Listing</strong> for just $29/month:</p>
               <ul>
-                <li>✓ 5 photo gallery images</li>
-                <li>✓ Featured badge display</li>
-                <li>✓ Priority in search results</li>
-                <li>✓ Website & social media links</li>
+                <li>&#10003; 5 photo gallery images</li>
+                <li>&#10003; Featured badge display</li>
+                <li>&#10003; Priority in search results</li>
+                <li>&#10003; Website & social media links</li>
               </ul>
               <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Upgrade Now</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
@@ -162,11 +162,11 @@ Deno.serve(async (req: Request) => {
               <p>Ready to take your listing to the next level?</p>
               <p>Upgrade to <strong>Premium</strong> for $59/month and get:</p>
               <ul>
-                <li>✓ Everything in Featured</li>
-                <li>✓ 15 photo gallery images</li>
-                <li>✓ Visitor analytics dashboard</li>
-                <li>✓ Click & engagement tracking</li>
-                <li>✓ 30-day performance history</li>
+                <li>&#10003; Everything in Featured</li>
+                <li>&#10003; 15 photo gallery images</li>
+                <li>&#10003; Visitor analytics dashboard</li>
+                <li>&#10003; Click & engagement tracking</li>
+                <li>&#10003; 30-day performance history</li>
               </ul>
               <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Upgrade to Premium</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
