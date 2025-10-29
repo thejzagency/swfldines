@@ -116,7 +116,7 @@ Deno.serve(async (req: Request) => {
           }
 
           const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/smooth-task`,
+            `${supabaseUrl}/functions/v1/send-email`,
             {
               method: "POST",
               headers: {
@@ -152,7 +152,7 @@ Deno.serve(async (req: Request) => {
                 <li>&#10003; Priority in search results</li>
                 <li>&#10003; Website & social media links</li>
               </ul>
-              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Upgrade Now</a></p>
+              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block.">Upgrade Now</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
             `;
           } else {
@@ -174,7 +174,7 @@ Deno.serve(async (req: Request) => {
           }
 
           const emailResponse = await fetch(
-            `${supabaseUrl}/functions/v1/smooth-task`,
+            `${supabaseUrl}/functions/v1/send-email`,
             {
               method: "POST",
               headers: {
