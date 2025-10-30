@@ -50,6 +50,18 @@ Deno.serve(async (req: Request) => {
           value: emailData.html,
         },
       ],
+      tracking_settings: {
+        click_tracking: {
+          enable: false,
+          enable_text: false
+        },
+        open_tracking: {
+          enable: true
+        },
+        subscription_tracking: {
+          enable: false
+        }
+      }
     };
 
     if (emailData.text) {
