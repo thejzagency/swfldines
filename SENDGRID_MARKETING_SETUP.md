@@ -119,7 +119,7 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
 **Email 3 - Day 7 (Final Nudge + Resources):**
 - Wait: 4 days after previous email (7 days total)
-- Subject: `Last Chance: Claim & Upgrade Offer Expires Tonight`
+- Subject: `Upgrade Your Restaurant Listing on SW Florida Dines`
 - Content:
   ```
   Hi there,
@@ -244,7 +244,7 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
 **Email 3 - Day 7 (Last Chance + Case Study):**
 - Wait: 4 days after previous email (7 days total)
-- Subject: `Last Day: Get 20% Off Your Upgrade`
+- Subject: `Upgrade Options for Your Restaurant Listing`
 - Content:
   ```
   Hi there,
