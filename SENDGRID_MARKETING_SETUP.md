@@ -85,34 +85,34 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
 **Email 2 - Day 3 (Claim & Upgrade Opportunity):**
 - Wait: 3 days after previous email
-- Subject: `Take Control of Your Restaurant Listing - Claim It Today!`
+- Subject: `Claim Your Restaurant on SWFLDines.com`
 - Content:
   ```
-  Hi again!
+  Hi there,
 
-  Your restaurant has been live on SW Florida Dines for 3 days now, and we hope you're starting to see some new customers!
+  We noticed you haven't claimed your restaurant listing yet on SWFLDines.com.
 
-  Did you know you can claim your listing and take full control? When you claim your restaurant, you'll be able to:
-  - Update your hours, menu, and contact information anytime
-  - Add photos and showcase your restaurant
-  - Respond to customer inquiries
-  - View analytics to see who's finding you
+  What you get with a Featured listing:
 
-  Even better - many restaurant owners find that upgrading to a premium listing significantly increases their exposure and customer inquiries.
+  ✓ Up to 5 photos to showcase your restaurant
+  ✓ Full description section to tell your story
+  ✓ Links to your website and social media profiles
+  ✓ Menu link for easy customer access
+  ✓ Featured badge on your listing
+  ✓ Priority placement in search results
 
-  Here's what you're missing with a Free listing:
-  - Featured placement (your competitors may be showing up first)
-  - Detailed analytics (who's viewing, calling, clicking)
-  - Photo galleries (customers want to see your space)
-  - Priority support (we're here to help you succeed)
+  Ready to claim your restaurant?
 
-  SPECIAL OFFER: Claim and upgrade in the next 4 days and get 20% off your first month!
+  1. Go to SWFLDines.com
+  2. Search for your restaurant
+  3. Click "View Details"
+  4. Click "Claim This Restaurant"
 
-  [Claim Your Listing Now] → Link to: https://www.swfldines.com
+  Featured listings are $29.99/month and give you full control over how your restaurant appears to potential customers.
 
-  Still have questions? Just reply to this email.
+  Questions? Just reply to this email.
 
-  Cheers,
+  Best regards,
   The SW Florida Dines Team
   ```
 
