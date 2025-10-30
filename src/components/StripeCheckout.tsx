@@ -48,8 +48,7 @@ const PLANS = {
       'Homepage featured spot',
       'Advanced analytics',
       '90-day performance history',
-      'Detailed click breakdown',
-      'Priority support'
+      'Detailed click breakdown'
     ]
   }
 };

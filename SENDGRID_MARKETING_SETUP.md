@@ -239,7 +239,6 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   ✓ Unlimited photos
   ✓ Homepage featured spot
   ✓ Advanced analytics with 90-day history
-  ✓ Priority support
 
   [View All Pricing Options] → Link to: https://www.swfldines.com/pricing
 
@@ -275,7 +274,7 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   ✓ Everything in Premium
   ✓ Unlimited photos
   ✓ Homepage featured placement
-  ✓ 90-day analytics & priority support
+  ✓ 90-day analytics history
 
   [View Pricing & Upgrade] → Link to: https://www.swfldines.com/pricing
 
