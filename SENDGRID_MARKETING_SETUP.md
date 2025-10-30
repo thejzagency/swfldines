@@ -68,11 +68,12 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   - You're now appearing in search results for your cuisine type and location
 
   Want to stand out even more? Consider claiming and upgrading your listing to get:
-  ✨ Higher visibility in search results
-  ✨ Featured placement on the homepage
-  ✨ Detailed analytics and insights
-  ✨ Custom photo galleries
-  ✨ Priority support
+  ✨ Up to 5 photos to showcase your restaurant (Featured)
+  ✨ Full description section to tell your story (Featured)
+  ✨ Featured badge display (Featured)
+  ✨ Priority placement in search results (Featured)
+  ✨ Analytics dashboard to track visitors (Premium)
+  ✨ Up to 15 photos (Premium)
   ✨ Ability to update your own information
 
   [Claim Your Listing] → Link to: https://www.swfldines.com
@@ -129,15 +130,14 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
   If you haven't already, claim your listing today to:
   ✅ Take control of your restaurant's information
-  ✅ Add photos and menus
   ✅ Update hours and contact details
-  ✅ See who's viewing your listing
+  ✅ Add website and social media links
 
   Then upgrade to a Featured, Premium, or Spotlight listing to:
+  ✅ Add photo galleries (5 photos with Featured, 15 with Premium, unlimited with Spotlight)
   ✅ Appear higher in search results
-  ✅ Get homepage exposure
-  ✅ See detailed analytics about customer interest
-  ✅ Showcase unlimited photos
+  ✅ Full description section to tell your story
+  ✅ Analytics dashboard (Premium and above)
 
   Don't let this opportunity pass you by.
 
@@ -184,11 +184,17 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
   While you're waiting, did you know you can upgrade your listing to get even more visibility?
 
-  Our Featured and Premium listings get:
-  - 5x more profile views
-  - 3x more phone calls
-  - Homepage placement
+  Our Featured listings ($29/month) include:
+  - Up to 5 photo gallery images
+  - Full description section
+  - Featured badge display
   - Priority in search results
+
+  Our Premium listings ($59/month) include:
+  - Everything in Featured
+  - Up to 15 photos
+  - Visitor analytics dashboard
+  - Click & engagement tracking
 
   [View Upgrade Options] → Link to: https://www.swfldines.com/pricing
 
@@ -205,24 +211,30 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   ```
   Hi again!
 
-  Now that you've claimed your restaurant, have you logged into your dashboard yet?
+  Now that you've claimed your restaurant, we wanted to let you know about the upgrade options available to help you attract more customers.
 
-  You should be seeing some early analytics about who's viewing your listing. But here's the thing - you're only seeing a fraction of what's possible.
+  Featured Listing ($29/month):
+  ✓ Up to 5 photos to showcase your restaurant
+  ✓ Full description section to tell your story
+  ✓ Links to your website and social media
+  ✓ Featured badge on your listing
+  ✓ Priority placement in search results
 
-  Here's what restaurant owners with Premium listings see:
-  📊 10x more profile views per month
-  📞 5x more phone calls from customers
-  🌟 Featured placement on homepage and in search
-  📸 Custom photo galleries that convert browsers into diners
+  Premium Listing ($59/month):
+  ✓ Everything in Featured
+  ✓ Up to 15 photos
+  ✓ Visitor analytics dashboard
+  ✓ Click & engagement tracking
+  ✓ 30-day performance history
 
-  Real Results from Real Restaurants:
-  "Since upgrading to Premium, we've seen a 40% increase in reservations!" - Maria's Italian Kitchen
+  Spotlight Listing ($99/month):
+  ✓ Everything in Premium
+  ✓ Unlimited photos
+  ✓ Homepage featured spot
+  ✓ Advanced analytics with 90-day history
+  ✓ Priority support
 
-  "The analytics alone are worth it. I can see exactly when customers are searching for us." - Joe's Seafood Shack
-
-  Want these results for your restaurant?
-
-  [Upgrade to Premium - 20% Off] → Link to: https://www.swfldines.com/pricing?discount=CLAIM20
+  [View All Pricing Options] → Link to: https://www.swfldines.com/pricing
 
   Questions? Just reply to this email.
 
@@ -237,30 +249,30 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   ```
   Hi there,
 
-  Just checking in one more time before this special offer expires tonight at midnight.
+  This is our final reminder about upgrading your restaurant listing on SW Florida Dines.
 
-  We want to share a quick success story:
+  Your free listing is active, but upgrading helps you reach more customers:
 
-  🌟 The Naples Bistro upgraded to Premium 2 months ago. Since then:
-  - Profile views increased from 150/month to 1,840/month
-  - Phone calls jumped from 12/month to 78/month
-  - They now rank #1 for "Italian restaurant Naples"
-  - Revenue is up 35%
+  Featured Listing ($29/month):
+  ✓ 5 photos to showcase your restaurant
+  ✓ Full description section
+  ✓ Featured badge & priority in search
 
-  This could be YOUR restaurant's story.
+  Premium Listing ($59/month):
+  ✓ Everything in Featured
+  ✓ 15 photos
+  ✓ Analytics dashboard to track visitors
+  ✓ 30-day performance history
 
-  For the price of just 2-3 extra customers per month, you get:
-  ✨ Top placement in search results
-  ✨ Homepage featured spot
-  ✨ Unlimited photos
-  ✨ Detailed analytics
-  ✨ Priority support
+  Spotlight Listing ($99/month):
+  ✓ Everything in Premium
+  ✓ Unlimited photos
+  ✓ Homepage featured placement
+  ✓ 90-day analytics & priority support
 
-  [Claim Your 20% Discount - Expires Tonight] → Link to: https://www.swfldines.com/pricing?discount=CLAIM20
+  [View Pricing & Upgrade] → Link to: https://www.swfldines.com/pricing
 
-  This is your last chance to get this discount. After tonight, it's full price.
-
-  Make the smart choice for your restaurant.
+  Your free listing will continue to work just fine if you choose not to upgrade.
 
   Best regards,
   The SW Florida Dines Team
