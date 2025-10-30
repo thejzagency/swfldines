@@ -55,26 +55,27 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
 **Email 1 - Day 0 (Immediate Welcome):**
 - Send: Immediately when added to list
-- Subject: `Welcome to SW Florida Dines - Your Restaurants Are Live!`
+- Subject: `Welcome to SW Florida Dines - Your Restaurant is Now Listed!`
 - Content:
   ```
   Hi there!
 
-  Thank you for uploading your restaurants to SW Florida Dines! Your listings are now live and visible to potential customers searching for dining options in Southwest Florida.
+  Great news! Your restaurant has been added to SW Florida Dines and is now live and visible to potential customers searching for dining options in Southwest Florida.
 
-  Here's what happens next:
-  - Your restaurants are immediately searchable on our directory
+  Here's what this means for you:
+  - Your restaurant is immediately searchable on our directory
   - Customers can view your contact information, hours, and details
-  - You'll start appearing in search results for your cuisine type and location
+  - You're now appearing in search results for your cuisine type and location
 
-  Want to stand out even more? Consider upgrading to a Featured, Premium, or Spotlight listing to get:
+  Want to stand out even more? Consider claiming and upgrading your listing to get:
   ✨ Higher visibility in search results
   ✨ Featured placement on the homepage
   ✨ Detailed analytics and insights
   ✨ Custom photo galleries
   ✨ Priority support
+  ✨ Ability to update your own information
 
-  [View Pricing Plans] → Link to: https://www.swfldines.com/pricing
+  [Claim Your Listing] → Link to: https://www.swfldines.com
 
   Questions? Reply to this email anytime.
 
@@ -82,16 +83,22 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   The SW Florida Dines Team
   ```
 
-**Email 2 - Day 3 (Upgrade Opportunity):**
+**Email 2 - Day 3 (Claim & Upgrade Opportunity):**
 - Wait: 3 days after previous email
-- Subject: `Boost Your Restaurant's Visibility - Special Upgrade Offer`
+- Subject: `Take Control of Your Restaurant Listing - Claim It Today!`
 - Content:
   ```
   Hi again!
 
-  Your restaurants have been live on SW Florida Dines for 3 days now. We wanted to reach out and see how things are going!
+  Your restaurant has been live on SW Florida Dines for 3 days now, and we hope you're starting to see some new customers!
 
-  Are you seeing the traffic you hoped for? Many restaurant owners find that upgrading to a premium listing significantly increases their exposure and customer inquiries.
+  Did you know you can claim your listing and take full control? When you claim your restaurant, you'll be able to:
+  - Update your hours, menu, and contact information anytime
+  - Add photos and showcase your restaurant
+  - Respond to customer inquiries
+  - View analytics to see who's finding you
+
+  Even better - many restaurant owners find that upgrading to a premium listing significantly increases their exposure and customer inquiries.
 
   Here's what you're missing with a Free listing:
   - Featured placement (your competitors may be showing up first)
@@ -99,9 +106,9 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   - Photo galleries (customers want to see your space)
   - Priority support (we're here to help you succeed)
 
-  SPECIAL OFFER: Upgrade in the next 4 days and get 20% off your first month!
+  SPECIAL OFFER: Claim and upgrade in the next 4 days and get 20% off your first month!
 
-  [Claim Your Discount] → Link to: https://www.swfldines.com/pricing?discount=UPGRADE20
+  [Claim Your Listing Now] → Link to: https://www.swfldines.com
 
   Still have questions? Just reply to this email.
 
@@ -111,7 +118,7 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
 **Email 3 - Day 7 (Final Nudge + Resources):**
 - Wait: 4 days after previous email (7 days total)
-- Subject: `Last Chance: Upgrade Offer Expires Tonight`
+- Subject: `Last Chance: Claim & Upgrade Offer Expires Tonight`
 - Content:
   ```
   Hi there,
@@ -120,15 +127,21 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
 
   Over the past week, thousands of people have browsed SW Florida Dines looking for their next dining experience. Are they finding YOUR restaurant?
 
-  With a Featured, Premium, or Spotlight listing, you'll:
+  If you haven't already, claim your listing today to:
+  ✅ Take control of your restaurant's information
+  ✅ Add photos and menus
+  ✅ Update hours and contact details
+  ✅ See who's viewing your listing
+
+  Then upgrade to a Featured, Premium, or Spotlight listing to:
   ✅ Appear higher in search results
   ✅ Get homepage exposure
-  ✅ See exactly who's interested in your restaurant
-  ✅ Showcase your best photos
+  ✅ See detailed analytics about customer interest
+  ✅ Showcase unlimited photos
 
   Don't let this opportunity pass you by.
 
-  [Upgrade Now and Save 20%] → Link to: https://www.swfldines.com/pricing?discount=UPGRADE20
+  [Claim & Upgrade Now - Save 20%] → Link to: https://www.swfldines.com
 
   If you have any questions or need help getting started, just reply to this email. We're here to help!
 
