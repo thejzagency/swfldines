@@ -39,6 +39,18 @@ async function sendEmail(to: string, toName: string, subject: string, html: stri
           value: html,
         },
       ],
+      tracking_settings: {
+        click_tracking: {
+          enable: false,
+          enable_text: false
+        },
+        open_tracking: {
+          enable: true
+        },
+        subscription_tracking: {
+          enable: false
+        }
+      }
     };
 
     console.log(`Sending email to ${toName} (${to})...`);
@@ -130,7 +142,7 @@ Deno.serve(async (req: Request) => {
         let html = "";
 
         if (sequence.sequence_type === "claim_reminder") {
-          const claimLink = `${supabaseUrl.replace("/v1", "")}?restaurant=${sequence.restaurant_id}`;
+          const claimLink = `https://www.swfldines.com?restaurant=${sequence.restaurant_id}`;
 
           if (sequence.current_step === 0) {
             templateName = "claim_reminder_1";
@@ -177,7 +189,7 @@ Deno.serve(async (req: Request) => {
           const tier = sequence.current_step === 0 ? "featured" : "premium";
           templateName = tier === "featured" ? "upsell_featured" : "upsell_premium";
 
-          const upgradeLink = `${supabaseUrl.replace("/v1", "")}/pricing`;
+          const upgradeLink = `https://www.swfldines.com/pricing`;
 
           if (tier === "featured") {
             subject = `Boost Your Restaurant's Visibility - Featured Listing`;
