@@ -124,31 +124,38 @@ You need to add the List IDs as secrets in your Supabase Edge Functions:
   ```
   Hi there,
 
-  This is your final reminder that our special 20% upgrade discount expires at midnight tonight!
+  This is our final message about upgrading your restaurant listing on SW Florida Dines.
 
-  Over the past week, thousands of people have browsed SW Florida Dines looking for their next dining experience. Are they finding YOUR restaurant?
+  People are browsing SW Florida Dines every day looking for their next dining experience. Make sure they find YOUR restaurant with an upgraded listing.
 
-  If you haven't already, claim your listing today to:
+  If you haven't already, claim your listing to:
   ✅ Take control of your restaurant's information
   ✅ Update hours and contact details
   ✅ Add website and social media links
 
-  Then upgrade to a Featured, Premium, or Spotlight listing to:
-  ✅ Add photo galleries (5 photos with Featured, 15 with Premium, unlimited with Spotlight)
-  ✅ Appear higher in search results
-  ✅ Full description section to tell your story
-  ✅ Analytics dashboard (Premium and above)
+  Then consider upgrading to get more visibility:
 
-  Don't let this opportunity pass you by.
+  Featured ($29/month):
+  ✅ 5 photos to showcase your restaurant
+  ✅ Full description section
+  ✅ Featured badge & priority in search
 
-  [Claim & Upgrade Now - Save 20%] → Link to: https://www.swfldines.com
+  Premium ($59/month):
+  ✅ Everything in Featured
+  ✅ 15 photos
+  ✅ Analytics dashboard to track visitors
 
-  If you have any questions or need help getting started, just reply to this email. We're here to help!
+  Spotlight ($99/month):
+  ✅ Everything in Premium
+  ✅ Unlimited photos
+  ✅ Homepage featured placement
+
+  [View Pricing & Upgrade] → Link to: https://www.swfldines.com
+
+  If you have any questions, just reply to this email. We're here to help!
 
   Best,
   The SW Florida Dines Team
-
-  P.S. - This discount won't be offered again, so grab it while you can!
   ```
 
 4. **Click "Activate Automation"**
