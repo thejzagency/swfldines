@@ -14,31 +14,65 @@ interface AddContactRequest {
 }
 
 Deno.serve(async (req: Request) => {
+  // Handle CORS preflight immediately
   if (req.method === "OPTIONS") {
     return new Response(null, {
-      status: 200,
+      status: 204,
       headers: corsHeaders,
     });
   }
 
   try {
     const sendgridApiKey = Deno.env.get('SENDGRID_API_KEY');
+    const csvUploadListId = Deno.env.get('SENDGRID_CSV_UPLOAD_LIST_ID');
+    const restaurantClaimListId = Deno.env.get('SENDGRID_RESTAURANT_CLAIM_LIST_ID');
+
+    console.log('Environment check:', {
+      hasApiKey: !!sendgridApiKey,
+      hasCsvListId: !!csvUploadListId,
+      hasClaimListId: !!restaurantClaimListId
+    });
 
     if (!sendgridApiKey) {
       console.error('SendGrid API key not configured');
-      throw new Error('SendGrid API key not configured');
+      return new Response(
+        JSON.stringify({ success: false, error: 'SendGrid API key not configured' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     const { email, firstName, lastName, listType }: AddContactRequest = await req.json();
 
     if (!email || !listType) {
-      throw new Error('Email and listType are required');
+      return new Response(
+        JSON.stringify({ success: false, error: 'Email and listType are required' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     console.log(`Adding contact ${email} to ${listType} list`);
 
+    const listId = listType === 'csv_upload' ? csvUploadListId : restaurantClaimListId;
+    
+    if (!listId) {
+      console.error(`List ID not configured for ${listType}`);
+      return new Response(
+        JSON.stringify({ success: false, error: `List ID not configured for ${listType}` }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const contactData = {
-      list_ids: [listType === 'csv_upload' ? Deno.env.get('SENDGRID_CSV_UPLOAD_LIST_ID') : Deno.env.get('SENDGRID_RESTAURANT_CLAIM_LIST_ID')],
+      list_ids: [listId],
       contacts: [
         {
           email: email,
@@ -47,6 +81,8 @@ Deno.serve(async (req: Request) => {
         },
       ],
     };
+
+    console.log('Sending to SendGrid:', JSON.stringify(contactData, null, 2));
 
     const response = await fetch('https://api.sendgrid.com/v3/marketing/contacts', {
       method: 'PUT',
@@ -57,22 +93,31 @@ Deno.serve(async (req: Request) => {
       body: JSON.stringify(contactData),
     });
 
+    const responseText = await response.text();
+    console.log('SendGrid response:', response.status, responseText);
+
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('SendGrid API error:', response.status, errorText);
-      throw new Error(`SendGrid error (${response.status}): ${errorText}`);
+      console.error('SendGrid API error:', response.status, responseText);
+      return new Response(
+        JSON.stringify({
+          success: false,
+          error: `SendGrid error (${response.status}): ${responseText}`
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
-    const result = await response.json();
+    const result = JSON.parse(responseText);
     console.log('Contact added successfully:', result);
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Contact added to list successfully' }),
+      JSON.stringify({ success: true, message: 'Contact added to list successfully', data: result }),
       {
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   } catch (error) {
@@ -81,14 +126,11 @@ Deno.serve(async (req: Request) => {
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message || 'Failed to add contact to list'
+        error: error instanceof Error ? error.message : 'Failed to add contact to list'
       }),
       {
         status: 500,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-        },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }
