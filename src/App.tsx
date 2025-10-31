@@ -219,9 +219,7 @@ function App() {
         claimedRestaurant.id
       );
 
-      await EmailService.startUpsellSequence(claimedRestaurant.id);
-
-      // Add user to SendGrid restaurant claim list
+      // Add user to SendGrid restaurant claim list (SendGrid automation handles email sequence)
       try {
         const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
         const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
