@@ -146,6 +146,36 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             errors.push(`Failed to upload "${row.name}": ${error.message}`);
           } else {
             success++;
+
+            if (row.email && row.email.trim()) {
+              try {
+                const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+                const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+                console.log('Adding restaurant email to SendGrid:', row.email);
+                const response = await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': `Bearer ${supabaseAnonKey}`,
+                    'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                    email: row.email.trim(),
+                    firstName: row.name || '',
+                    listType: 'csv_upload'
+                  })
+                });
+
+                const responseData = await response.json();
+                console.log('SendGrid response for', row.email, ':', responseData);
+
+                if (!response.ok) {
+                  console.error('SendGrid API error for', row.email, ':', responseData);
+                }
+              } catch (emailError) {
+                console.error('Failed to add restaurant email to list:', emailError);
+              }
+            }
           }
         } catch (error: any) {
           failed++;
@@ -156,41 +186,6 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
       setResult({ success, failed, errors });
       if (success > 0) {
         onUploadComplete();
-
-        // Add user to SendGrid CSV upload list
-        try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user?.email) {
-            const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-            const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-            console.log('Calling add-to-sendgrid-list for:', user.email);
-            const response = await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${supabaseAnonKey}`,
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                email: user.email,
-                listType: 'csv_upload'
-              })
-            });
-
-            const responseData = await response.json();
-            console.log('SendGrid response:', responseData);
-
-            if (!response.ok) {
-              console.error('SendGrid API error:', responseData);
-            } else {
-              console.log('User successfully added to CSV upload email sequence');
-            }
-          } else {
-            console.log('No user email found');
-          }
-        } catch (emailError) {
-          console.error('Failed to add to email list:', emailError);
-        }
       }
     } catch (error: any) {
       alert(`Upload failed: ${error.message}`);
