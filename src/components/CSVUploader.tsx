@@ -164,7 +164,8 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
             const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
             const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-            await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
+            console.log('Calling add-to-sendgrid-list for:', user.email);
+            const response = await fetch(`${supabaseUrl}/functions/v1/add-to-sendgrid-list`, {
               method: 'POST',
               headers: {
                 'Authorization': `Bearer ${supabaseAnonKey}`,
@@ -175,7 +176,17 @@ export default function CSVUploader({ onUploadComplete }: CSVUploaderProps) {
                 listType: 'csv_upload'
               })
             });
-            console.log('User added to CSV upload email sequence');
+
+            const responseData = await response.json();
+            console.log('SendGrid response:', responseData);
+
+            if (!response.ok) {
+              console.error('SendGrid API error:', responseData);
+            } else {
+              console.log('User successfully added to CSV upload email sequence');
+            }
+          } else {
+            console.log('No user email found');
           }
         } catch (emailError) {
           console.error('Failed to add to email list:', emailError);
