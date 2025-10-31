@@ -192,34 +192,39 @@ Deno.serve(async (req: Request) => {
           const upgradeLink = `https://www.swfldines.com/pricing`;
 
           if (tier === "featured") {
-            subject = `Boost Your Restaurant's Visibility - Featured Listing`;
+            subject = `Stand Out From the Crowd - Featured Listing`;
             html = `
               <h2>Hi ${restaurant.name}!</h2>
               <p>We've noticed you claimed your restaurant listing - that's great!</p>
-              <p>Want to stand out even more? Upgrade to a <strong>Featured Listing</strong> for just $29/month:</p>
+              <p>Ready to attract more customers? Upgrade to a <strong>Featured Listing</strong> for just $29/month and get:</p>
               <ul>
-                <li>&#10003; 5 photo gallery images</li>
-                <li>&#10003; Featured badge display</li>
-                <li>&#10003; Priority in search results</li>
-                <li>&#10003; Website & social media links</li>
+                <li>&#10003; 5 photo gallery images - Show off your best dishes</li>
+                <li>&#10003; Full description section - Tell your story</li>
+                <li>&#10003; Website & social media links - Drive traffic</li>
+                <li>&#10003; Menu URL link - Let customers browse before they visit</li>
+                <li>&#10003; Featured badge display - Stand out visually</li>
+                <li>&#10003; Priority in search results - Be seen first</li>
               </ul>
-              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block.">Upgrade Now</a></p>
+              <p>Choose the plan that's right for you - Featured, Premium, or Spotlight.</p>
+              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">View All Plans</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
             `;
           } else {
-            subject = `Unlock Advanced Analytics - Premium Listing`;
+            subject = `See What's Working - Unlock Analytics for Your Restaurant`;
             html = `
               <h2>Hi ${restaurant.name}!</h2>
-              <p>Ready to take your listing to the next level?</p>
-              <p>Upgrade to <strong>Premium</strong> for $59/month and get:</p>
+              <p>Want to know how customers are finding and interacting with your listing?</p>
+              <p>Our <strong>Premium</strong> ($59/mo) and <strong>Spotlight</strong> ($99/mo) plans include powerful analytics:</p>
               <ul>
-                <li>&#10003; Everything in Featured</li>
-                <li>&#10003; 15 photo gallery images</li>
-                <li>&#10003; Visitor analytics dashboard</li>
-                <li>&#10003; Click & engagement tracking</li>
-                <li>&#10003; 30-day performance history</li>
+                <li>&#10003; 15+ photo gallery images - Showcase your full menu</li>
+                <li>&#10003; Features/amenities section - Highlight what makes you special</li>
+                <li>&#10003; Visitor analytics dashboard - See who's viewing your listing</li>
+                <li>&#10003; Click & engagement tracking - Know what resonates</li>
+                <li>&#10003; 30-90 day performance history - Track your growth</li>
+                <li>&#10003; Enhanced search visibility - Reach more diners</li>
               </ul>
-              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Upgrade to Premium</a></p>
+              <p>Compare all plans and choose what works best for your restaurant.</p>
+              <p><a href="${upgradeLink}" style="background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block;">Compare All Plans</a></p>
               <p>Best regards,<br>SW Florida Dines Team</p>
             `;
           }
